@@ -1,7 +1,11 @@
-export default function Home() {
+"use client";
+import Navbar from "./components/Navbar/Navbar";
+const MostUsed = () => {
   return (
-    <section id="home">
-      <div>Home Page</div>
+    <section>
+      <Navbar />
+      <div>Most Used</div>
     </section>
   );
-}
+};
+export default MostUsed;
