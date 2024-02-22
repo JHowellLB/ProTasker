@@ -1,30 +1,32 @@
-"use client";
 import SignupCSS from "./login.module.css";
-import { signIn } from "next-auth/react";
-import googleLogo from "../assets/images/Google__G__logo.svg.png";
-import Image from "next/image";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../../pages/api/auth/[...nextauth]";
+import { GoogleLogin } from "./login";
+import { GoogleLogout } from "./login";
+import Link from "next/link";
 
-const Login = () => {
+const Login = async () => {
+  const session = await getServerSession(authOptions);
   return (
     <section id="signup" className={SignupCSS.signupWrapper}>
       <div className={SignupCSS.signupBox}>
         <h1 className={SignupCSS.title}>ProTasker</h1>
-        <div className={SignupCSS.googleWrapper}>
-          <button
-            type="button"
-            onClick={() => signIn("google")}
-            className={SignupCSS.googleContainer}
-          >
-            <div className={SignupCSS.googleFont}>
-              <Image
-                src={googleLogo!}
-                alt="google logo"
-                className={SignupCSS.googleImg}
-              />
-              Sign Up With Google
+        {session ? (
+          <div className={SignupCSS.googleWrapper}>
+            <div className={SignupCSS.errorText}>
+              <div className={SignupCSS.email}> {session.user?.email} </div>
+              <div>LOGGED IN</div>
             </div>
-          </button>
-        </div>
+            <Link href="/" className={SignupCSS.returnText}>
+              Return to Home Page
+            </Link>
+            <GoogleLogout />
+          </div>
+        ) : (
+          <div className={SignupCSS.googleWrapper}>
+            <GoogleLogin />
+          </div>
+        )}
       </div>
     </section>
   );

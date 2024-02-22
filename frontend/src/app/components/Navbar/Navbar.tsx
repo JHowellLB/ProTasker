@@ -40,7 +40,7 @@ const Navbar = () => {
       </div>
       <div className={NavbarCSS.navSignOut}>
         <button onClick={profileClicked(profile)}>
-          <Image
+          <img
             src={session.data?.user?.image!}
             alt=""
             className={NavbarCSS.profile}

@@ -15,10 +15,6 @@
 }
 
 .signupBox {
-  width: max-content;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   background: #f5f8fa;
   border-radius: 3rem;
   border: 0.5rem solid black;
@@ -70,5 +66,34 @@
 }
 
 .loginLink {
+  font-family: "Lato-Bold";
+}
+
+.errorText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 2rem;
+  font-family: "Lato-Bold";
+  color: red;
+  padding: 1rem 1rem 0rem 1rem;
+}
+
+.returnText {
+  padding: 0.5rem;
+  border: 0.25rem solid black;
+  border-radius: 1rem;
+}
+
+.returnText:hover {
+  background: #e1e8ed;
+}
+
+.logoutContainer {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.logout {
   font-family: "Lato-Bold";
 }
