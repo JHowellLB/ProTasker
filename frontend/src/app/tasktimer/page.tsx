@@ -1,5 +1,4 @@
 import Navbar from "../components/Navbar/Navbar";
-import { auth, provider } from "../services/firebase";
 
 const TaskTimer = () => {
   return (

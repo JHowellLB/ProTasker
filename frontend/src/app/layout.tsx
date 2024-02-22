@@ -18,7 +18,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <SessionProvider session={session}>
-          {!session ? <Login /> : <MostUsed />}
+          {!session ? <Login /> : children}
         </SessionProvider>
       </body>
     </html>
