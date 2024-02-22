@@ -12,7 +12,7 @@ const Signup = () => {
     signInWithPopup(auth, provider).then((data) => {
       console.log(data.user.emailVerified);
       if (data.user.emailVerified) {
-        router.push("/");
+        router.push("/mostused");
       }
     });
   };
