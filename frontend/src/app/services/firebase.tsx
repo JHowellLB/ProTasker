@@ -3,28 +3,28 @@ import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
 import { GoogleAuthProvider, getAuth } from "firebase/auth";
 
-// import {
-//   API_KEY,
-//   AUTH_DOMAIN,
-//   PROJECT_ID,
-//   STORAGE_BUCKET,
-//   MESSAGING_SENDER_ID,
-//   APP_ID,
-//   MEASUREMENT_ID,
-// } from "./config";
+import {
+  API_KEY,
+  AUTH_DOMAIN,
+  PROJECT_ID,
+  STORAGE_BUCKET,
+  MESSAGING_SENDER_ID,
+  APP_ID,
+  MEASUREMENT_ID,
+} from "./config";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 // const firebaseConfig = {
-//   apiKey: process.env.PUBLIC_NEXT_API_KEY_ENV,
-//   authDomain: process.env.PUBLIC_NEXT_AUTH_DOMAIN_ENV,
-//   projectId: process.env.PUBLIC_NEXT_PROJECT_ID_ENV,
-//   storageBucket: process.env.PUBLIC_NEXT_STORAGE_BUCKET_ENV,
-//   messagingSenderId: process.env.PUBLIC_NEXT_MESSAGING_SENDER_ID_ENV,
-//   appId: process.env.PUBLIC_NEXT_APP_ID_ENV,
-//   measurementId: process.env.PUBLIC_NEXT_MEASUREMENT_ID_ENV,
+//   apiKey: API_KEY,
+//   authDomain: AUTH_DOMAIN,
+//   projectId: PROJECT_ID,
+//   storageBucket: STORAGE_BUCKET,
+//   messagingSenderId: MESSAGING_SENDER_ID,
+//   appId: APP_ID,
+//   measurementId: MEASUREMENT_ID,
 // };
 
 const firebaseConfig = {
