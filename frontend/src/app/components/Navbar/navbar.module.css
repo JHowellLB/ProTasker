@@ -2,6 +2,15 @@
   font-family: "Lato-Bold";
   src: url(../../assets/fonts/Lato-Bold.ttf);
 }
+@font-face {
+  font-family: "Lato";
+  src: url(../../assets/fonts/Lato-Regular.ttf);
+}
+
+.navWrapper {
+  display: flex;
+  justify-content: space-between;
+}
 .navContainer {
   display: flex;
   background: black;
@@ -22,5 +31,41 @@
 
 .linksActive {
   color: black;
+  background: #aab8c2;
+}
+.navSignOut {
+  margin: 1rem 1rem 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.6rem;
+}
+
+.profile {
+  border-radius: 10rem;
+  height: 3rem;
+  width: 3rem;
+}
+
+.profile:hover {
+  box-shadow: 0rem 0 0.5rem black;
+}
+
+.logout {
+  display: none;
+}
+
+.logoutActive {
+  display: block;
+  position: absolute;
+  margin: 3.25rem;
+  padding: 0.25rem;
+  border: 0.1rem solid black;
+  border-radius: 1rem;
+  font-family: "Lato";
+  box-shadow: 0rem 0rem 0.1rem black;
+}
+
+.logoutActive:hover {
   background: #aab8c2;
 }
