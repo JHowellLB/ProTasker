@@ -2,6 +2,7 @@
 import SignupCSS from "./login.module.css";
 import { signIn } from "next-auth/react";
 import googleLogo from "../assets/images/Google__G__logo.svg.png";
+import Image from "next/image";
 
 const Login = () => {
   return (
@@ -15,8 +16,8 @@ const Login = () => {
             className={SignupCSS.googleContainer}
           >
             <div className={SignupCSS.googleFont}>
-              <img
-                src={googleLogo.src}
+              <Image
+                src={googleLogo!}
                 alt="google logo"
                 className={SignupCSS.googleImg}
               />

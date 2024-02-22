@@ -1,6 +1,7 @@
 "use client";
 import NavbarCSS from "./navbar.module.css";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
@@ -39,7 +40,11 @@ const Navbar = () => {
       </div>
       <div className={NavbarCSS.navSignOut}>
         <button onClick={profileClicked(profile)}>
-          <img src={session.data?.user?.image} className={NavbarCSS.profile} />
+          <Image
+            src={session.data?.user?.image!}
+            alt=""
+            className={NavbarCSS.profile}
+          />
         </button>
         <div className={profile ? NavbarCSS.logoutActive : NavbarCSS.logout}>
           <button onClick={() => signOut()}>Logout</button>
