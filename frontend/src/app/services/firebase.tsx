@@ -3,15 +3,15 @@ import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
 import { GoogleAuthProvider, getAuth } from "firebase/auth";
 
-import {
-  API_KEY,
-  AUTH_DOMAIN,
-  PROJECT_ID,
-  STORAGE_BUCKET,
-  MESSAGING_SENDER_ID,
-  APP_ID,
-  MEASUREMENT_ID,
-} from "./config";
+// import {
+//   API_KEY,
+//   AUTH_DOMAIN,
+//   PROJECT_ID,
+//   STORAGE_BUCKET,
+//   MESSAGING_SENDER_ID,
+//   APP_ID,
+//   MEASUREMENT_ID,
+// } from "./config";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 

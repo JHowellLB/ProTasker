@@ -3,11 +3,7 @@ import SignupCSS from "./login.module.css";
 import { signIn } from "next-auth/react";
 import googleLogo from "../assets/images/Google__G__logo.svg.png";
 
-import { useRouter } from "next/navigation";
-
 const Login = () => {
-  const router = useRouter();
-
   return (
     <section id="signup" className={SignupCSS.signupWrapper}>
       <div className={SignupCSS.signupBox}>

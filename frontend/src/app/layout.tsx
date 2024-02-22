@@ -4,9 +4,13 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import SessionProvider from "./SessionProvider";
 import Login from "./login/page";
-import MostUsed from "./page";
 
 const inter = Inter({ subsets: ["latin"] });
+
+export const metadata = {
+  title: "ProTasker",
+  description: "We Make Dreams Come True",
+};
 
 export default async function RootLayout({
   children,
