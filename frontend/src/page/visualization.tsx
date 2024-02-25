@@ -1,9 +1,7 @@
-import Navbar from "../Navbar/Navbar";
 const Visualization = () => {
   return (
     <section>
-      <Navbar />
-      <div>Most Used</div>
+      <div>Visualization</div>
     </section>
   );
 };
