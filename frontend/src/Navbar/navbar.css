@@ -4,31 +4,28 @@
 }
 .navWrapper {
   display: flex;
-  /* padding: 1rem; */
   background: black;
   width: max-content;
   border-bottom-right-radius: 1rem;
+  overflow: hidden;
 }
 
-/* .link, */
-/* .activeLink {
-  padding: 0.3rem;
-  color: white;
+.navWrapper div {
+  display: flex;
+}
+
+.navWrapper div li {
+  list-style: none;
+}
+
+.navWrapper div li a {
+  display: block;
   text-decoration: none;
+  color: white;
+  padding: 1rem 1.5rem 1rem 1.5rem;
   font-family: "Lato-Bold";
 }
 
-.activeLink {
-  background: #aab8c2;
-  color: black;
-} */
-a {
-  color: white;
-  background: black;
-  text-decoration: none;
-}
-
-a:is(:link, :active, :visited).active {
-  color: black;
-  background: #aab8c2;
+.active {
+  background-color: #aab8c2;
 }
