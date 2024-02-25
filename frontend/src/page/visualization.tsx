@@ -1,5 +1,5 @@
 import Navbar from "../Navbar/Navbar";
-const MostUsed = () => {
+const Visualization = () => {
   return (
     <section>
       <Navbar />
@@ -8,4 +8,4 @@ const MostUsed = () => {
   );
 };
 
-export default MostUsed;
+export default Visualization;
