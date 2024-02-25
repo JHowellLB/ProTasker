@@ -10,7 +10,7 @@ const App = () => {
     <Router>
       <Navbar />
       <Routes>
-        <Route path="" element={<MostUsed />} />
+        <Route path="/" element={<MostUsed />} />
         <Route path="/visualization" element={<Visualization />} />
         <Route path="/sitelimit" element={<SiteLimit />} />
         <Route path="/tasktimer" element={<TaskTimer />} />
