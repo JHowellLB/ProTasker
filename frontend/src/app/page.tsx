@@ -1,10 +1,10 @@
-// "use client";
 import Navbar from "./components/Navbar/Navbar";
+import MainCSS from "./main.module.css";
 const MostUsed = () => {
   return (
-    <section>
+    <section id="main">
       <Navbar />
-      <div>Most Used</div>
+      <div className={MainCSS.addWebsite}>Add Website</div>
     </section>
   );
 };
