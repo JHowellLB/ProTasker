@@ -5,6 +5,5 @@
   "description": "An extension to boost your productivity",
   "action": {
     "default_popup": "index.html"
-  },
-  "host_permissions": ["http://*/*", "https://*/*"]
+  }
 }
