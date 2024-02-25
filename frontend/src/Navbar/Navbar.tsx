@@ -4,17 +4,17 @@ import { NavLink } from "react-router-dom";
 const Navbar = () => {
   return (
     <nav className="navWrapper">
-      <div className="linksContainer">
-        <li className="links">
+      <div>
+        <li>
           <NavLink to="/">Most Used</NavLink>
         </li>
-        <li className="links">
+        <li>
           <NavLink to="/visualization">Visualization</NavLink>
         </li>
-        <li className="links">
+        <li>
           <NavLink to="/sitelimit">Site Limit</NavLink>
         </li>
-        <li className="links">
+        <li>
           <NavLink to="/tasktimer">Task Timer</NavLink>
         </li>
       </div>

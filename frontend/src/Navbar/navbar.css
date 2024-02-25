@@ -7,24 +7,25 @@
   background: black;
   width: max-content;
   border-bottom-right-radius: 1rem;
+  overflow: hidden;
+}
+
+.navWrapper div {
+  display: flex;
+}
+
+.navWrapper div li {
+  list-style: none;
+}
+
+.navWrapper div li a {
+  display: block;
+  text-decoration: none;
+  color: white;
+  padding: 1rem 1.5rem 1rem 1.5rem;
+  font-family: "Lato-Bold";
 }
 
 .active {
   background-color: #aab8c2;
-  color: black;
-}
-.navWrapper .linksContainer {
-  display: flex;
-}
-
-.navWrapper .linksContainer .links {
-  list-style: none;
-}
-
-.navWrapper .linksContainer .links a {
-  display: block;
-  text-decoration: none;
-  color: white;
-  padding: 0.5rem;
-  font-family: "Lato-Bold";
 }
