@@ -1,7 +1,8 @@
+import DailyWeekly from "../components/DailyWeekly/DailyWeekly";
 const MostUsed = () => {
   return (
     <section>
-      <div>Most Used</div>
+      <DailyWeekly />
     </section>
   );
 };

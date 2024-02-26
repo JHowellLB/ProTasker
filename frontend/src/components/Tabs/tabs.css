@@ -20,7 +20,6 @@
 
 .inactive,
 .onTab {
-  display: block;
   text-decoration: none;
   color: white;
   padding: 1rem 1.5rem 1rem 1.5rem;
@@ -28,10 +27,10 @@
   font-family: "Lato-Bold";
 }
 
-.onTab,
-.inactive:hover,
-.onTab:hover {
+.inactive {
+  cursor: pointer;
+}
+.onTab {
   background: #aab8c2;
   color: black;
-  cursor: pointer;
 }

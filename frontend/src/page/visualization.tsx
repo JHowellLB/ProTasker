@@ -1,7 +1,8 @@
+import DailyWeekly from "../components/DailyWeekly/DailyWeekly";
 const Visualization = () => {
   return (
     <section>
-      <div>Visualization</div>
+      <DailyWeekly />
     </section>
   );
 };
