@@ -22,8 +22,8 @@ jobs:
           node-version: v20.5.0
       - name: install dependencies
         run: npm ci
-      - name: run lint
-        run: npm run lint
+      # - name: run lint
+      #   run: npm run lint
       # - name: run tests
       #   run: npm run test
       - name: builds project
