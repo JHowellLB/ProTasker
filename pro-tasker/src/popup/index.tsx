@@ -5,22 +5,29 @@ import "../globals.css"
 import Navbar from "../components/Navbar/Navbar"
 
 function IndexPopup() {
-  const [currentUrl, setCurrentUrl] = useState<string>("")
-  const getCurrntUrl = async () => {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
-    setCurrentUrl(tab.url)
-  }
+  const [user, setUserInfo] = useState(false)
 
   useEffect(() => {
-    getCurrntUrl()
-  }, [currentUrl])
-
+    chrome.identity.getProfileUserInfo((userInfo) => {
+      if (chrome.runtime.lastError) {
+        console.error(chrome.runtime.lastError)
+        return
+      }
+      if (userInfo.email != "") {
+        setUserInfo(true)
+      }
+    })
+  }, [])
+  console.log("userInfo", user)
   return (
-    <div
-      style={{
-        padding: 16
-      }}>
-      <Navbar />
+    <div>
+      {user ? (
+        <div>
+          <Navbar />
+        </div>
+      ) : (
+        <div>Log in to Google Account</div>
+      )}
     </div>
   )
 }
