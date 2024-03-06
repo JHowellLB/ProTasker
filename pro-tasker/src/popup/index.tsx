@@ -2,23 +2,14 @@ import { useEffect, useState } from "react"
 
 import "../globals.css"
 
+import AuthForm from "~components/Auth/Auth"
+import useFirebaseUser from "~firebase/firebaseUser"
+
 import Navbar from "../components/Navbar/Navbar"
 
 function IndexPopup() {
-  const [user, setUserInfo] = useState(false)
+  const { user, isLoading, onLogin } = useFirebaseUser()
 
-  useEffect(() => {
-    chrome.identity.getProfileUserInfo((userInfo) => {
-      if (chrome.runtime.lastError) {
-        console.error(chrome.runtime.lastError)
-        return
-      }
-      if (userInfo.email != "") {
-        setUserInfo(true)
-      }
-    })
-  }, [])
-  console.log("userInfo", user)
   return (
     <div>
       {user ? (
@@ -26,7 +17,7 @@ function IndexPopup() {
           <Navbar />
         </div>
       ) : (
-        <div>Log in to Google Account</div>
+        <AuthForm />
       )}
     </div>
   )

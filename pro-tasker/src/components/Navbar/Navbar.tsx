@@ -2,10 +2,10 @@ import "./navbar.css"
 
 import { useState } from "react"
 
-import MostUsed from "~pages/mostused"
-import SiteLimit from "~pages/sitelimit"
-import TaskTimer from "~pages/tasktimer"
-import Visualization from "~pages/visualization"
+import MostUsed from "~tabs/mostused"
+import SiteLimit from "~tabs/sitelimit"
+import TaskTimer from "~tabs/tasktimer"
+import Visualization from "~tabs/visualization"
 
 const Tabs = () => {
   const [activeTab, setActiveTab] = useState("mostused")
