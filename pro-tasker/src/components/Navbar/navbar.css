@@ -3,6 +3,10 @@
   src: url(../../assets/fonts/Lato-Bold.ttf);
 }
 
+.tabWrapper {
+  display: flex;
+  justify-content: space-between;
+}
 .navWrapper {
   display: flex;
   width: max-content;
@@ -33,4 +37,11 @@
 .onTab {
   background: #aab8c2;
   color: black;
+}
+
+.logoutBtn {
+  cursor: pointer;
+  font-family: "Lato";
+  background: black;
+  border-radius: 1rem;
 }
