@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react"
-
 import "../globals.css"
 
 import AuthForm from "~components/Auth/Auth"
