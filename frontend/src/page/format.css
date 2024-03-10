@@ -1,0 +1,43 @@
+.addTask {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top:0.75rem;
+    margin-left:1rem;
+    font-size:1rem;
+    background-color:#657786;
+    color:white;
+    width:6.5rem;
+    height:1.75rem;
+    border-radius:0.5rem;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 5rem;
+    left: 5rem;
+    width: 25rem;
+    height: 12rem;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+}
+
+.popUpHeader {
+    display: flex;
+    justify-content:space-between;
+    background-color:#E2E1E1;
+}
+
+h3 {
+    padding-left:1.5rem;
+}
+
+.closeBox {
+    margin-top:0.75rem;
+    width:2rem;
+    height:2rem;
+    font-size:16px;
+}
+
