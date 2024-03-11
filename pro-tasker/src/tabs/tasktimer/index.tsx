@@ -1,4 +1,4 @@
-import "./tasktimer.css"
+import "./task_styles.css"
 
 const togglePopup = () => {
   let popup = document.getElementById("popup")
@@ -45,4 +45,4 @@ const TaskTimer = () => {
   )
 }
 
-export default TaskTimer
+export default TaskTimer 
