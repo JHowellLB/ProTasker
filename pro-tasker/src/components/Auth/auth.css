@@ -1,0 +1,81 @@
+@font-face {
+  font-family: "Lato";
+  src: url(../../assets/fonts/Lato-Regular.ttf);
+}
+@font-face {
+  font-family: "Lato-Bold";
+  src: url(../../assets/fonts/Lato-Bold.ttf);
+}
+.authWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 35rem;
+  height: 20rem;
+}
+
+.authContainer {
+  background: #f5f8fa;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.loginSignup {
+  font-family: "Lato-Bold";
+  font-size: 1.5rem;
+  padding: 1rem;
+}
+
+.loginSignupText {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.signupForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-family: "Lato";
+  font-size: 1rem;
+}
+
+.authFormText,
+.termsContainer {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.terms {
+  text-decoration: none;
+}
+.textbox {
+  background: #e1e8ed;
+  color: black;
+}
+
+.btn {
+  font-family: "Lato-Bold";
+  width: max-content;
+  padding: 0.25rem;
+}
+
+.btn:hover {
+  cursor: pointer;
+}
+
+.signInContainer {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.rememberText {
+  display: flex;
+  gap: 0.25rem;
+}
+.protaskerText {
+  color: #1da1f2;
+}
