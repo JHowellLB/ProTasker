@@ -19,7 +19,7 @@
     top: 5rem;
     left: 5rem;
     width: 25rem;
-    height: 15rem;
+    height: 13rem;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 0.5rem;
@@ -65,4 +65,4 @@ h3 {
     padding:0.2rem;
     border:1px solid #ccc;
     width:3.5rem;
-}
+} 
