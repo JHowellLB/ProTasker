@@ -33,9 +33,12 @@
 }
 
 .Log {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 13rem 5.75rem 2rem;
+    column-gap: 1rem;
     width: 26.5rem;
+    text-overflow:ellipsis;
+    overflow: hidden;
     
 }
 
