@@ -19,7 +19,7 @@ const Task = () => {
   ltask.innerText = task;
   ltask.className = "logEle";
   const ltime = document.createElement("div");
-  ltime.innerText = h + " " + m;
+  ltime.innerText = h + " : " + m;
   ltime.className = "logEle";
   const lplay = document.createElement("button");
   lplay.className = "PPE";
@@ -47,6 +47,7 @@ const Task = () => {
       <div className="taskLog">
         <div className="logHeader">
           <h4>Tasks</h4>
+          <h4></h4>
           <h4>Timer</h4>
           <h4>Play/Pause</h4>
         </div>
@@ -77,7 +78,7 @@ const Task = () => {
                 className="time"
                 type="text"
                 placeholder="Minutes"></input>
-              <input className="time" type="submit" value="Save" onClick={() => Task()}></input>
+              <input className="time" type="submit" value="Save" onClick={() => setVisibility(!visibility)}></input>
             </div>
           </div>
         </div>
