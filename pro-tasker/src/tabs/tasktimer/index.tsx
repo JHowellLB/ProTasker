@@ -36,6 +36,8 @@ const Task = () => {
 
   document.getElementById("logBody").innerHTML += row.outerHTML;
 
+  setVisibility(!visibility);
+
 }
 
   return (
@@ -78,7 +80,7 @@ const Task = () => {
                 className="time"
                 type="text"
                 placeholder="Minutes"></input>
-              <input className="time" type="submit" value="Save" onClick={() => setVisibility(!visibility)}></input>
+              <input className="time" type="submit" value="Save" onClick={() => Task()}></input>
             </div>
           </div>
         </div>
