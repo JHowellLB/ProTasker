@@ -15,7 +15,6 @@
 }
 
 .popup {
-    display: none;
     position: fixed;
     top: 5rem;
     left: 5rem;
@@ -39,6 +38,7 @@ h3 {
 }
 
 .closeBox {
+    cursor: pointer;
     margin-top:0.75rem;
     width:2rem;
     height:2rem;
