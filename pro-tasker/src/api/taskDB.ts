@@ -113,3 +113,37 @@ export async function editTask(taskName: string, taskHours: number, taskMinutes:
         console.log('Task key does not exist: ', taskKey)
     }
 }
+
+
+
+export async function retrieveTask() {
+    let taskList = []
+    chrome.storage.local.get(null, function(items) {
+        let allKeys = Object.keys(items);
+        for (let i = 0; i < allKeys.length; i++) {
+            taskList.push(allKeys[i])
+        }
+    });
+    return taskList;
+}
+
+
+export async function getHoursMinutes(taskKey:string) {
+    const getResult = () => {
+        return new Promise(resolve => {
+            chrome.storage.local.get(taskKey, result => {
+                if (chrome.runtime.lastError) {
+                    console.error('Error checking for existing task:', chrome.runtime.lastError.message);
+                    // Resolve with undefined in case of an error
+                    resolve(undefined);
+                } else {
+                    resolve(result[taskKey]);
+                }
+            });
+        });
+    };
+
+    const result = await getResult();
+
+    return result;
+}
