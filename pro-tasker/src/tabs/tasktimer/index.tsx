@@ -3,42 +3,48 @@ import React, {useState} from "react"
 
 const TaskTimer = () => {
   const [visibility, setVisibility] = useState(false);
+ // Latest version
+  const Task = () => {
+    // Get input values
+    let task = (document.getElementById("task") as HTMLInputElement).value.trim();
+    let h = parseInt((document.getElementById("hour") as HTMLInputElement).value);
+    let m = parseInt((document.getElementById("minute") as HTMLInputElement).value);
 
-const Task = () => {
-  const row = document.createElement("div");
-  row.className = "row";
-  
-  const logger = document.createElement("div");
-  logger.className = "Log";
+    // Validate inputs
+    if (task === "" || isNaN(h) || isNaN(m) || h < 0 || m < 0 || m >= 60) {
+      alert("Please enter valid inputs. Task name should not be empth, and minutes must be less than 60.");
+      return;
+    }
 
-  let task = (document.getElementById("task") as HTMLInputElement).value;
-  let h = (document.getElementById("hour") as HTMLInputElement).value;
-  let m = (document.getElementById("minute") as HTMLInputElement).value;
+    const row = document.createElement("div");
+    row.className = "row";
+    
+    const logger = document.createElement("div");
+    logger.className = "Log";
 
-  const ltask = document.createElement("div");
-  ltask.innerText = task;
-  ltask.className = "logEle";
-  const ltime = document.createElement("div");
-  ltime.innerText = h + " : " + m;
-  ltime.className = "logEle";
-  const lplay = document.createElement("button");
-  lplay.className = "PPE";
+    const ltask = document.createElement("div");
+    ltask.innerText = task;
+    ltask.className = "logEle";
+    const ltime = document.createElement("div");
+    ltime.innerText = h + " : " + m;
+    ltime.className = "logEle";
+    const lplay = document.createElement("button");
+    lplay.className = "PPE";
 
-  logger.innerHTML += ltask.outerHTML;
-  logger.innerHTML += ltime.outerHTML;
-  logger.innerHTML += lplay.outerHTML;
-  row.innerHTML += logger.outerHTML;
+    logger.innerHTML += ltask.outerHTML;
+    logger.innerHTML += ltime.outerHTML;
+    logger.innerHTML += lplay.outerHTML;
+    row.innerHTML += logger.outerHTML;
 
-  const edit = document.createElement("button");
-  edit.className = "PPE";
+    const edit = document.createElement("button");
+    edit.className = "PPE";
 
-  row.innerHTML += edit.outerHTML;
+    row.innerHTML += edit.outerHTML;
 
-  document.getElementById("logBody").innerHTML += row.outerHTML;
+    document.getElementById("logBody").innerHTML += row.outerHTML;
 
-  setVisibility(!visibility);
-
-}
+    setVisibility(!visibility);
+  }
 
   return (
     <section>
@@ -89,4 +95,4 @@ const Task = () => {
   )
 }
 
-export default TaskTimer 
+export default TaskTimer

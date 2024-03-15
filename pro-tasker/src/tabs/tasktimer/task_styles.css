@@ -15,10 +15,11 @@
 }
 
 .taskLog {
-    height:13rem;
+    height: 13rem;
     margin: 1rem;
-    background-color:#AAB8C2;
+    background-color: #AAB8C2;
     border-radius: 1rem;
+    overflow-y: auto;
 }
 
 .row {
@@ -67,7 +68,9 @@
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 0.5rem;
+    z-index: 2; /* Adjusted z-index */
 }
+
 
 .popUpHeader {
     display: flex;
@@ -113,3 +116,31 @@ h3 {
     border:1px solid #ccc;
     width:3.5rem;
 } 
+
+
+/* Scrollbar Styles */
+.taskLog::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+
+.taskLog::-webkit-scrollbar-thumb {
+    background-color: #657786;
+    border-radius: 10px;
+}
+
+.taskLog::-webkit-scrollbar-thumb:hover {
+    background-color: #546A7B;
+}
+/* Header Styles */
+.logHeader {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 2rem;
+    padding-right: 6rem;
+    color: #657786;
+    position: sticky;
+    top: 0;
+    background-color: #AAB8C2;
+    z-index: 1;
+}
