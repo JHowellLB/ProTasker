@@ -71,16 +71,6 @@
     z-index: 2; /* Adjusted z-index */
 }
 
-/* .popup {
-    position: fixed;
-    top: 5rem;
-    left: 5rem;
-    width: 25rem;
-    height: 13rem;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 0.5rem;
-} */
 
 .popUpHeader {
     display: flex;
