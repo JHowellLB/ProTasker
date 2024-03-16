@@ -26,22 +26,6 @@
     display: flex; 
 }
 
-<<<<<<< HEAD
-.PPE {
-    cursor: pointer;
-    margin-left:3rem;
-    width: 2rem;
-    height: 2rem;
-}
-
-.edit {
-    cursor: pointer;
-    margin-left:3rem;
-    width: 2rem;
-    height: 2rem;
-}
-=======
->>>>>>> main
 .Log {
     display: grid;
     grid-template-columns: 12rem 5rem 2rem;

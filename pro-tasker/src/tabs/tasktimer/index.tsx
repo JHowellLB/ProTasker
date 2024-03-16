@@ -76,9 +76,10 @@ const TaskTimer = () => {
 
   return (
     <section>
-      <div className="addTask" onClick={() => setVisibility(true)}>
+      <div className="addTask" onClick={() => setVisibility(!visibility)}>
         + Add Task
       </div>
+
       <div className="taskLog">
         <div className="logHeader">
           <h4>Tasks</h4>
@@ -87,15 +88,14 @@ const TaskTimer = () => {
           <h4>Edit</h4>
         </div>
         <div id="logBody">
-          {tasks.map(task => <Task key={task.id} task={task} onDelete={deleteTask} onEdit={setCurrentTask} />)}
         </div>
       </div>
-      
+
       {visibility && (
         <div id="popup" className="popup">
           <div className="popUpHeader">
             <h3 className="titleLabel">Add Task</h3>
-            <div className="closeBox" onClick={() => setVisibility(false)}>
+            <div className="closeBox" onClick={() => setVisibility(!visibility)}>
               X
             </div>
           </div>
@@ -104,36 +104,23 @@ const TaskTimer = () => {
             <input id="task" className="task_input" type="text"></input>
             <h3>Task Timer:</h3>
             <div className="time_input">
-              <input id="hour" className="time" type="text" placeholder="Hours"></input>
-              <input id="minute" className="time" type="text" placeholder="Minutes"></input>
-              <input className="time" type="submit" value="Save" onClick={addTask}></input>
-            </div>
-          </div>
-        </div>
-      )}
-      {editVisibility && (
-        <div id="editPopup" className="popup">
-          <div className="popUpHeader">
-            <h3 className="titleLabel">Edit Task</h3>
-            <div className="closeBox" onClick={() => setEditVisibility(false)}>
-              X
-            </div>
-          </div>
-          <div>
-            <h3>Task Name:</h3>
-            <input id="editTask" className="task_input" type="text" value={currentTask.task}></input>
-            <h3>Task Timer:</h3>
-            <div className="time_input">
-              <input id="editHour" className="time" type="text" placeholder="Hours" value={currentTask.h}></input>
-              <input id="editMinute" className="time" type="text" placeholder="Minutes" value={currentTask.m}></input>
-              <input className="time" type="submit" value="Save" onClick={() => {}}></input>
-              <input className="time" type="submit" value="Delete" onClick={() => deleteTask(currentTask.id)}></input>
+              <input
+                id="hour"
+                className="time"
+                type="text"
+                placeholder="Hours"></input>
+              <input
+                id="minute"
+                className="time"
+                type="text"
+                placeholder="Minutes"></input>
+              <input className="time" type="submit" value="Save" onClick={() => Task()}></input>
             </div>
           </div>
         </div>
       )}
     </section>
-  );
-};
+  )
+}
 
 export default TaskTimer
