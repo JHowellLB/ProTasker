@@ -5,6 +5,7 @@ import "./task_styles.css"
 
 const TaskTimer = () => {
   const [visibility, setVisibility] = useState(false);
+  const [editVisibility, setEditVisibility] = useState(false);
 
   function loadTasks() {
     let getTasks = retrieveTask();
@@ -43,10 +44,14 @@ const TaskTimer = () => {
 
       const edit = document.createElement("button");
       edit.className = "E";
+      edit.addEventListener("click", function() {
+        setEditVisibility(true); 
+      });
+      row.appendChild(edit); 
+    
+      document.getElementById("logBody").appendChild(row);
+    
 
-      row.innerHTML += edit.outerHTML;
-
-      document.getElementById("logBody").innerHTML += row.outerHTML;
   }
 
 
@@ -79,7 +84,6 @@ const TaskTimer = () => {
       <div className="addTask" onClick={() => setVisibility(!visibility)}>
         + Add Task
       </div>
-
       <div className="taskLog">
         <div className="logHeader">
           <h4>Tasks</h4>
@@ -90,6 +94,7 @@ const TaskTimer = () => {
         <div id="logBody">
         </div>
       </div>
+      
 
       {visibility && (
         <div id="popup" className="popup">
@@ -115,6 +120,27 @@ const TaskTimer = () => {
                 type="text"
                 placeholder="Minutes"></input>
               <input className="time" type="submit" value="Save" onClick={() => Task()}></input>
+            </div>
+          </div>
+        </div>
+      )}
+      {editVisibility && (
+        <div id="editPopup" className="popup">
+          <div className="popUpHeader">
+            <h3 className="titleLabel">Edit Task</h3>
+            <div className="closeBox" onClick={() => setEditVisibility(false)}>
+              X
+            </div>
+          </div>
+          <div>
+            <h3>Task Name:</h3>
+            <input id="editTask" className="task_input" type="text"></input>
+            <h3>Task Timer:</h3>
+            <div className="time_input">
+              <input id="editHour" className="time" type="text" placeholder="Hours"></input>
+              <input id="editMinute" className="time" type="text" placeholder="Minutes" ></input>
+              <input className="time" type="submit" value="Save" onClick={() => {}}></input>
+              <input className="time" type="submit" value="Delete" onClick={() => {}}></input>
             </div>
           </div>
         </div>
