@@ -4,7 +4,7 @@ import React, {useState} from "react"
 import "./task_styles.css"
 
 const TaskTimer = () => {
-  const [visibility, setVisibility] = useState(false);
+  const [addVisibility, setAddVisibility] = useState(false);
 
   function loadTasks() {
     let getTasks = retrieveTask();
@@ -21,35 +21,31 @@ const TaskTimer = () => {
   }
 
   const createRow = (task:string, h:number, m:number) => {
+
     const row = document.createElement("div");
-      row.className = "row";
-      
-      const logger = document.createElement("div");
-      logger.className = "Log";
+    row.className = "row";
 
-      const ltask = document.createElement("div");
-      ltask.innerText = task;
-      ltask.className = "logEle";
-      const ltime = document.createElement("div");
-      ltime.innerText = h + " : " + m;
-      ltime.className = "timeEle";
-      const lplay = document.createElement("button");
-      lplay.className = "PP";
+    const ltask = document.createElement("div");
+    ltask.innerText = task;
+    ltask.className = "logEle";
+    ltask.id = task;
+    const ltime = document.createElement("div");
+    ltime.innerText = h + " : " + m;
+    ltime.className = "timeEle";
+    const lplay = document.createElement("button");
+    lplay.className = "PP";
+    const ledit = document.createElement("button");
+    ledit.className = "E";
+    ledit.onclick = () => {setAddVisibility(!addVisibility)}; // FIXIT Needs to connect edit button to function
 
-      logger.innerHTML += ltask.outerHTML;
-      logger.innerHTML += ltime.outerHTML;
-      logger.innerHTML += lplay.outerHTML;
-      row.innerHTML += logger.outerHTML;
+    row.innerHTML += ltask.outerHTML;
+    row.innerHTML += ltime.outerHTML;
+    row.innerHTML += lplay.outerHTML;
+    row.innerHTML += ledit.outerHTML;
 
-      const edit = document.createElement("button");
-      edit.className = "E";
+    document.getElementById("logBody").innerHTML += row.outerHTML;
 
-      row.innerHTML += edit.outerHTML;
-
-      document.getElementById("logBody").innerHTML += row.outerHTML;
   }
-
-
 
   async function Task() {
     // Get input values
@@ -64,10 +60,9 @@ const TaskTimer = () => {
     }
 
     await addTask(task, h, m);
-
     loadTasks();
 
-    setVisibility(!visibility);
+    setAddVisibility(!addVisibility);
   }
 
 
@@ -76,7 +71,7 @@ const TaskTimer = () => {
 
   return (
     <section>
-      <div className="addTask" onClick={() => setVisibility(!visibility)}>
+      <div className="addTask" onClick={() => setAddVisibility(!addVisibility)}>
         + Add Task
       </div>
 
@@ -91,11 +86,11 @@ const TaskTimer = () => {
         </div>
       </div>
 
-      {visibility && (
+      {addVisibility && (
         <div id="popup" className="popup">
           <div className="popUpHeader">
             <h3 className="titleLabel">Add Task</h3>
-            <div className="closeBox" onClick={() => setVisibility(!visibility)}>
+            <div className="closeBox" onClick={() => setAddVisibility(!addVisibility)}>
               X
             </div>
           </div>

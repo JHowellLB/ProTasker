@@ -23,14 +23,9 @@
 }
 
 .row {
-    display: flex; 
-}
-
-.Log {
     display: grid;
-    grid-template-columns: 12rem 5rem 2rem;
+    grid-template-columns: 12rem 5rem 2rem 2rem;
     column-gap: 2rem;
-    width: 26.5rem;
     text-overflow:ellipsis;
     overflow: hidden;
     
@@ -66,7 +61,7 @@
 
 .E {
     cursor: pointer;
-    margin-left:3rem;
+    margin-left:4.4rem;
     width: 2rem;
     height: 2rem;
     background: url("../../../assets/editButton.png");
