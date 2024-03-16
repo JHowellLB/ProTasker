@@ -17,6 +17,7 @@ declare namespace chrome {
         interface StorageArea {
             set: (items: { [key: string]: any }, callback?: () => void) => void;
             get: (keys: string | string[] | null, callback: (items: { [key: string]: any }) => void) => void;
+            remove: (keys: string | string[], callback: (items: { [key: string]: any }) => void) => void;
         }
         const local: StorageArea;
     }
@@ -106,6 +107,46 @@ export async function editTask(taskName: string, taskHours: number, taskMinutes:
                 console.error('Error adding task:', chrome.runtime.lastError);
             } else {
                 console.log('Task edited:', taskKey);
+            }
+        });
+    }
+    else {
+        console.log('Task key does not exist: ', taskKey)
+    }
+}
+
+// Function to remove a task entry in storage
+// Function also checks if the key does not exist, if so, task can not be removed.
+export async function removeTask(taskName: string) {
+    // Concatenate 'task-' to uniquely identify task keys.
+    const taskKey = 'task-' + taskName.toLowerCase();
+
+    // chrome.storage.local.get() must be wrapped in a promise to allow await.
+    const getResult = () => {
+        return new Promise(resolve => {
+            chrome.storage.local.get(taskKey, result => {
+                if (chrome.runtime.lastError) {
+                    console.error('Error checking for existing task:', chrome.runtime.lastError.message);
+                    // Resolve with undefined in case of an error
+                    resolve(undefined);
+                } else {
+                    resolve(result[taskKey]);
+                }
+            });
+        });
+    };
+
+    // Result is used later on, so await is used to ensure it contains the correct value.
+    const result = await getResult()
+
+    // If the result's type is not undefined, the key is in use. Therefore, the task can be removed.
+    // Otherwise, the key is not in use, so the task can not be removed. Log the error.
+    if (typeof result != 'undefined') {
+        chrome.storage.local.remove( taskKey , () => {
+            if (chrome.runtime.lastError) {
+                console.error('Error removing task:', chrome.runtime.lastError);
+            } else {
+                console.log('Task removed:', taskKey);
             }
         });
     }
