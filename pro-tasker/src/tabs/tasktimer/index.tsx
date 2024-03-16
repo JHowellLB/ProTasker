@@ -22,11 +22,9 @@ const TaskTimer = () => {
   }
 
   const createRow = (task:string, h:number, m:number) => {
+
     const row = document.createElement("div");
-      row.className = "row";
-      
-      const logger = document.createElement("div");
-      logger.className = "Log";
+    row.className = "row";
 
       const ltask = document.createElement("div");
       ltask.innerText = task;
@@ -54,8 +52,6 @@ const TaskTimer = () => {
 
   }
 
-
-
   async function Task() {
     // Get input values
     let task = (document.getElementById("task") as HTMLInputElement).value.trim();
@@ -69,10 +65,9 @@ const TaskTimer = () => {
     }
 
     await addTask(task, h, m);
-
     loadTasks();
 
-    setVisibility(!visibility);
+    setAddVisibility(!addVisibility);
   }
 
 
@@ -81,7 +76,7 @@ const TaskTimer = () => {
 
   return (
     <section>
-      <div className="addTask" onClick={() => setVisibility(!visibility)}>
+      <div className="addTask" onClick={() => setAddVisibility(!addVisibility)}>
         + Add Task
       </div>
       <div className="taskLog">
@@ -100,7 +95,7 @@ const TaskTimer = () => {
         <div id="popup" className="popup">
           <div className="popUpHeader">
             <h3 className="titleLabel">Add Task</h3>
-            <div className="closeBox" onClick={() => setVisibility(!visibility)}>
+            <div className="closeBox" onClick={() => setAddVisibility(!addVisibility)}>
               X
             </div>
           </div>
