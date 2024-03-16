@@ -1,50 +1,78 @@
-import "./task_styles.css"
+export {}
+import {addTask, editTask, retrieveTask, getHoursMinutes} from "../../api/taskDB"
 import React, {useState} from "react"
+import "./task_styles.css"
 
 const TaskTimer = () => {
   const [visibility, setVisibility] = useState(false);
- // Latest version
-  const Task = () => {
+
+  function loadTasks() {
+    let getTasks = retrieveTask();
+    getTasks.then((message) => {
+      let taskArray = new Array(message);
+      taskArray = taskArray[0];
+      for (let i = 0; i < taskArray.length; i++) {
+        let getTime = getHoursMinutes(taskArray[i]);
+        getTime.then((message) => {
+          createRow(taskArray[i], message.hours, message.minutes);
+        })
+      }
+    })
+  }
+
+  const createRow = (task:string, h:number, m:number) => {
+    const row = document.createElement("div");
+      row.className = "row";
+      
+      const logger = document.createElement("div");
+      logger.className = "Log";
+
+      const ltask = document.createElement("div");
+      ltask.innerText = task;
+      ltask.className = "logEle";
+      const ltime = document.createElement("div");
+      ltime.innerText = h + " : " + m;
+      ltime.className = "timeEle";
+      const lplay = document.createElement("button");
+      lplay.className = "PP";
+
+      logger.innerHTML += ltask.outerHTML;
+      logger.innerHTML += ltime.outerHTML;
+      logger.innerHTML += lplay.outerHTML;
+      row.innerHTML += logger.outerHTML;
+
+      const edit = document.createElement("button");
+      edit.className = "E";
+
+      row.innerHTML += edit.outerHTML;
+
+      document.getElementById("logBody").innerHTML += row.outerHTML;
+  }
+
+
+
+  async function Task() {
     // Get input values
     let task = (document.getElementById("task") as HTMLInputElement).value.trim();
     let h = parseInt((document.getElementById("hour") as HTMLInputElement).value);
     let m = parseInt((document.getElementById("minute") as HTMLInputElement).value);
 
     // Validate inputs
-    if (task === "" || isNaN(h) || isNaN(m) || h < 0 || m < 0 || m >= 60) {
-      alert("Please enter valid inputs. Task name should not be empth, and minutes must be less than 60.");
+    if (task === "" || isNaN(h) || isNaN(m) || h < 0 || h > 999 || m < 0 || m >= 60) {
+      alert("Invalid Input. Task Name, Hours and Minutes should be valid.");
       return;
     }
 
-    const row = document.createElement("div");
-    row.className = "row";
-    
-    const logger = document.createElement("div");
-    logger.className = "Log";
+    await addTask(task, h, m);
 
-    const ltask = document.createElement("div");
-    ltask.innerText = task;
-    ltask.className = "logEle";
-    const ltime = document.createElement("div");
-    ltime.innerText = h + " : " + m;
-    ltime.className = "logEle";
-    const lplay = document.createElement("button");
-    lplay.className = "PPE";
-
-    logger.innerHTML += ltask.outerHTML;
-    logger.innerHTML += ltime.outerHTML;
-    logger.innerHTML += lplay.outerHTML;
-    row.innerHTML += logger.outerHTML;
-
-    const edit = document.createElement("button");
-    edit.className = "PPE";
-
-    row.innerHTML += edit.outerHTML;
-
-    document.getElementById("logBody").innerHTML += row.outerHTML;
+    loadTasks();
 
     setVisibility(!visibility);
   }
+
+
+  loadTasks();
+
 
   return (
     <section>
@@ -55,9 +83,9 @@ const TaskTimer = () => {
       <div className="taskLog">
         <div className="logHeader">
           <h4>Tasks</h4>
-          <h4></h4>
           <h4>Timer</h4>
           <h4>Play/Pause</h4>
+          <h4>Edit</h4>
         </div>
         <div id="logBody">
         </div>
