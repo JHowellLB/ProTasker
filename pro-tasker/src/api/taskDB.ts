@@ -117,15 +117,14 @@ export async function editTask(taskName: string, taskHours: number, taskMinutes:
 
 
 export async function retrieveTask() {
-    let taskList = []
-    chrome.storage.local.get(null, function(items) {
-        let allKeys = Object.keys(items);
-        for (let i = 0; i < allKeys.length; i++) {
-            taskList.push(allKeys[i])
-        }
-    });
-    return taskList;
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get(null, function(items) {
+            let allKeys = Object.keys(items)
+            resolve(allKeys)
+        })
+    })
 }
+
 
 
 export async function getHoursMinutes(taskKey:string) {

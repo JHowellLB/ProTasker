@@ -6,34 +6,52 @@ import "./task_styles.css"
 const TaskTimer = () => {
   const [visibility, setVisibility] = useState(false);
 
-
-
-  
-
-  async function loadTasks() {
-    await chrome.storage.local.clear()
-    await addTask('Sample Task', 1, 30)
-    await addTask('Task1', 2, 45)
-    await addTask('Task-2', 999, 24)
-
-    let allKeys = retrieveTask();
-    console.log("Key", allKeys);
-    let duration = getHoursMinutes(allKeys[0]);
-    console.log("Time:", duration);
-    
-    
-
+  function loadTasks() {
+    let getTasks = retrieveTask();
+    getTasks.then((message) => {
+      let taskArray = new Array(message);
+      taskArray = taskArray[0];
+      for (let i = 0; i < taskArray.length; i++) {
+        let getTime = getHoursMinutes(taskArray[i]);
+        getTime.then((message) => {
+          createRow(taskArray[i], message.hours, message.minutes);
+        })
+      }
+    })
   }
 
-  loadTasks();
+  const createRow = (task:string, h:number, m:number) => {
+    const row = document.createElement("div");
+      row.className = "row";
+      
+      const logger = document.createElement("div");
+      logger.className = "Log";
+
+      const ltask = document.createElement("div");
+      ltask.innerText = task;
+      ltask.className = "logEle";
+      const ltime = document.createElement("div");
+      ltime.innerText = h + " : " + m;
+      ltime.className = "timeEle";
+      const lplay = document.createElement("button");
+      lplay.className = "PP";
+
+      logger.innerHTML += ltask.outerHTML;
+      logger.innerHTML += ltime.outerHTML;
+      logger.innerHTML += lplay.outerHTML;
+      row.innerHTML += logger.outerHTML;
+
+      const edit = document.createElement("button");
+      edit.className = "E";
+
+      row.innerHTML += edit.outerHTML;
+
+      document.getElementById("logBody").innerHTML += row.outerHTML;
+  }
 
 
 
-
-
-
-
-  const Task = () => {
+  async function Task() {
     // Get input values
     let task = (document.getElementById("task") as HTMLInputElement).value.trim();
     let h = parseInt((document.getElementById("hour") as HTMLInputElement).value);
@@ -45,39 +63,16 @@ const TaskTimer = () => {
       return;
     }
 
+    await addTask(task, h, m);
 
-    // Placeholder
-    const row = document.createElement("div");
-    row.className = "row";
-    
-    const logger = document.createElement("div");
-    logger.className = "Log";
-
-    const ltask = document.createElement("div");
-    ltask.innerText = task;
-    ltask.className = "logEle";
-    const ltime = document.createElement("div");
-    ltime.innerText = h + " : " + m;
-    ltime.className = "timeEle";
-    const lplay = document.createElement("button");
-    lplay.className = "PP";
-
-    logger.innerHTML += ltask.outerHTML;
-    logger.innerHTML += ltime.outerHTML;
-    logger.innerHTML += lplay.outerHTML;
-    row.innerHTML += logger.outerHTML;
-
-    const edit = document.createElement("button");
-    edit.className = "E";
-
-    row.innerHTML += edit.outerHTML;
-
-    document.getElementById("logBody").innerHTML += row.outerHTML;
-    // Placeholder
-
+    loadTasks();
 
     setVisibility(!visibility);
   }
+
+
+  loadTasks();
+
 
   return (
     <section>
