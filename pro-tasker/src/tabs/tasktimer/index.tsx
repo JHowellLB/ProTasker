@@ -1,39 +1,78 @@
+export {}
+import {addTask, editTask, retrieveTask, getHoursMinutes} from "../../api/taskDB"
+import React, {useState} from "react"
 import "./task_styles.css"
-import React, { useState } from 'react';
-
 
 const TaskTimer = () => {
   const [visibility, setVisibility] = useState(false);
-  const [editVisibility, setEditVisibility] = useState(false);
-  const [tasks, setTasks] = useState([]);
-  const [currentTask, setCurrentTask] = useState({id: "", task: "", h: "", m: ""});
 
-  const Task = ({ task, onDelete, onEdit }) => {
-    return (
-      <div className="row" id={task.id}>
-        <div className="Log">
-          <div className="logEle">{task.task}</div>
-          <div className="logEle">{task.h} : {task.m}</div>
-          <button className="PPE">Play/Pause</button>
-        </div>
-        <button className="PPE" onClick={() => { onEdit(task); setEditVisibility(true)}}>Edit</button>
-      </div>
-    );
-  };
+  function loadTasks() {
+    let getTasks = retrieveTask();
+    getTasks.then((message) => {
+      let taskArray = new Array(message);
+      taskArray = taskArray[0];
+      for (let i = 0; i < taskArray.length; i++) {
+        let getTime = getHoursMinutes(taskArray[i]);
+        getTime.then((message) => {
+          createRow(taskArray[i], message.hours, message.minutes);
+        })
+      }
+    })
+  }
 
-  const addTask = () => {
-    let task = (document.getElementById("task") as HTMLInputElement).value;
-    let h = (document.getElementById("hour") as HTMLInputElement).value;
-    let m = (document.getElementById("minute")as HTMLInputElement).value;
-    let id = Date.now().toString(); 
-    setTasks([...tasks, {id, task, h, m}]);
-    setVisibility(false);
-  };
+  const createRow = (task:string, h:number, m:number) => {
+    const row = document.createElement("div");
+      row.className = "row";
+      
+      const logger = document.createElement("div");
+      logger.className = "Log";
 
-  const deleteTask = (id) => {
-    setTasks(tasks.filter(task => task.id !== id));
-    setEditVisibility(false);
-  };
+      const ltask = document.createElement("div");
+      ltask.innerText = task;
+      ltask.className = "logEle";
+      const ltime = document.createElement("div");
+      ltime.innerText = h + " : " + m;
+      ltime.className = "timeEle";
+      const lplay = document.createElement("button");
+      lplay.className = "PP";
+
+      logger.innerHTML += ltask.outerHTML;
+      logger.innerHTML += ltime.outerHTML;
+      logger.innerHTML += lplay.outerHTML;
+      row.innerHTML += logger.outerHTML;
+
+      const edit = document.createElement("button");
+      edit.className = "E";
+
+      row.innerHTML += edit.outerHTML;
+
+      document.getElementById("logBody").innerHTML += row.outerHTML;
+  }
+
+
+
+  async function Task() {
+    // Get input values
+    let task = (document.getElementById("task") as HTMLInputElement).value.trim();
+    let h = parseInt((document.getElementById("hour") as HTMLInputElement).value);
+    let m = parseInt((document.getElementById("minute") as HTMLInputElement).value);
+
+    // Validate inputs
+    if (task === "" || isNaN(h) || isNaN(m) || h < 0 || h > 999 || m < 0 || m >= 60) {
+      alert("Invalid Input. Task Name, Hours and Minutes should be valid.");
+      return;
+    }
+
+    await addTask(task, h, m);
+
+    loadTasks();
+
+    setVisibility(!visibility);
+  }
+
+
+  loadTasks();
+
 
   return (
     <section>
@@ -43,9 +82,9 @@ const TaskTimer = () => {
       <div className="taskLog">
         <div className="logHeader">
           <h4>Tasks</h4>
-          <h4></h4>
           <h4>Timer</h4>
           <h4>Play/Pause</h4>
+          <h4>Edit</h4>
         </div>
         <div id="logBody">
           {tasks.map(task => <Task key={task.id} task={task} onDelete={deleteTask} onEdit={setCurrentTask} />)}
@@ -97,4 +136,4 @@ const TaskTimer = () => {
   );
 };
 
-export default TaskTimer;
+export default TaskTimer

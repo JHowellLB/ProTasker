@@ -15,16 +15,18 @@
 }
 
 .taskLog {
-    height:13rem;
+    height: 13rem;
     margin: 1rem;
-    background-color:#AAB8C2;
+    background-color: #AAB8C2;
     border-radius: 1rem;
+    overflow-y: auto;
 }
 
 .row {
     display: flex; 
 }
 
+<<<<<<< HEAD
 .PPE {
     cursor: pointer;
     margin-left:3rem;
@@ -38,10 +40,12 @@
     width: 2rem;
     height: 2rem;
 }
+=======
+>>>>>>> main
 .Log {
     display: grid;
-    grid-template-columns: 13rem 5.75rem 2rem;
-    column-gap: 1rem;
+    grid-template-columns: 12rem 5rem 2rem;
+    column-gap: 2rem;
     width: 26.5rem;
     text-overflow:ellipsis;
     overflow: hidden;
@@ -53,15 +57,52 @@
     color: white;
     padding-top: 0.5rem;
     padding-left:1.5rem;
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.5rem; 
+}
+
+.timeEle {
+    font-size: 1rem;
+    color: white;
+    text-align: right;
+    padding-top: 0.5rem;
+    padding-left:1.5rem;
+    padding-bottom: 0.5rem; 
+    justify-content: right;
+}
+
+.PP {
+    cursor: pointer;
+    margin-left:3rem;
+    width: 2rem;
+    height: 2rem;
+    background: url("../../../assets/playButton.png");
+    background-size: 100% 100%;
+    border:none;
+}
+
+.E {
+    cursor: pointer;
+    margin-left:3rem;
+    width: 2rem;
+    height: 2rem;
+    background: url("../../../assets/editButton.png");
+    background-size: 100% 100%;
+    border:none;
 }
 
 .logHeader {
-    display: flex;
-    justify-content: space-between;
-    padding-left:2rem;
+    display: grid;
+    grid-template-columns: 14.7rem 6.6rem 6.3rem 2rem;
+    padding-left: 2rem;
     padding-right: 6rem;
     color: #657786;
+    position: sticky;
+    top: 0;
+    background-color: #AAB8C2;
+    z-index: 1;
+    border-bottom: 1px solid #657786;
+    margin-bottom: 8px;
+    height: 2.5rem;
 }
 
 .popup {
@@ -73,7 +114,9 @@
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 0.5rem;
+    z-index: 2; /* Adjusted z-index */
 }
+
 
 .popUpHeader {
     display: flex;
@@ -119,3 +162,19 @@ h3 {
     border:1px solid #ccc;
     width:3.5rem;
 } 
+
+
+/* Scrollbar Styles */
+.taskLog::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+
+.taskLog::-webkit-scrollbar-thumb {
+    background-color: #657786;
+    border-radius: 10px;
+}
+
+.taskLog::-webkit-scrollbar-thumb:hover {
+    background-color: #546A7B;
+}

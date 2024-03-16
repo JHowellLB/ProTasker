@@ -33,7 +33,8 @@
     "permissions": [
       "identity",
       "identity.email",
-      "tabs"
+      "tabs",
+      "storage"
     ],
     "background": {
       "service_worker": "background"
