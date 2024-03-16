@@ -4,7 +4,7 @@ import React, {useState} from "react"
 import "./task_styles.css"
 
 const TaskTimer = () => {
-  const [visibility, setVisibility] = useState(false);
+  const [addVisibility, setAddVisibility] = useState(false);
   const [editVisibility, setEditVisibility] = useState(false);
 
   function loadTasks() {
@@ -26,30 +26,26 @@ const TaskTimer = () => {
     const row = document.createElement("div");
     row.className = "row";
 
-      const ltask = document.createElement("div");
-      ltask.innerText = task;
-      ltask.className = "logEle";
-      const ltime = document.createElement("div");
-      ltime.innerText = h + " : " + m;
-      ltime.className = "timeEle";
-      const lplay = document.createElement("button");
-      lplay.className = "PP";
+    const ltask = document.createElement("div");
+    ltask.innerText = task;
+    ltask.className = "logEle";
+    const ltime = document.createElement("div");
+    ltime.innerText = h + " : " + m;
+    ltime.className = "timeEle";
+    const lplay = document.createElement("button");
+    lplay.className = "PP";
+    const ledit = document.createElement("button");
+    ledit.className = "E";
+    ledit.addEventListener("click", function() {
+      setEditVisibility(true); 
+    });
 
-      logger.innerHTML += ltask.outerHTML;
-      logger.innerHTML += ltime.outerHTML;
-      logger.innerHTML += lplay.outerHTML;
-      row.innerHTML += logger.outerHTML;
+    row.innerHTML += ltask.outerHTML;
+    row.innerHTML += ltime.outerHTML;
+    row.innerHTML += lplay.outerHTML;
+    row.appendChild(ledit);
 
-      const edit = document.createElement("button");
-      edit.className = "E";
-      edit.addEventListener("click", function() {
-        setEditVisibility(true); 
-      });
-      row.appendChild(edit); 
-    
-      document.getElementById("logBody").appendChild(row);
-    
-
+    document.getElementById("logBody").appendChild(row);
   }
 
   async function Task() {
@@ -91,7 +87,7 @@ const TaskTimer = () => {
       </div>
       
 
-      {visibility && (
+      {addVisibility && (
         <div id="popup" className="popup">
           <div className="popUpHeader">
             <h3 className="titleLabel">Add Task</h3>
@@ -101,7 +97,7 @@ const TaskTimer = () => {
           </div>
           <div>
             <h3>Task Name:</h3>
-            <input id="task" className="task_input" type="text"></input>
+            <input id="task" className="task_input" type="text" placeholder="Input Name"></input>
             <h3>Task Timer:</h3>
             <div className="time_input">
               <input
@@ -128,10 +124,10 @@ const TaskTimer = () => {
             </div>
           </div>
           <div>
-            <h3>Task Name:</h3>
-            <input id="editTask" className="task_input" type="text"></input>
-            <h3>Task Timer:</h3>
-            <div className="time_input">
+            <h3>Edit Name:</h3>
+            <input id="editTask" className="task_input" type="text" placeholder="Edit Name"></input>
+            <h3>Edit Timer:</h3>
+            <div className="edit_input">
               <input id="editHour" className="time" type="text" placeholder="Hours"></input>
               <input id="editMinute" className="time" type="text" placeholder="Minutes" ></input>
               <input className="time" type="submit" value="Save" onClick={() => {}}></input>
