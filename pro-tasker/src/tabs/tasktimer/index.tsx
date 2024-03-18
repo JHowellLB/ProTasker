@@ -8,6 +8,13 @@ const TaskTimer = () => {
   const [editVisibility, setEditVisibility] = useState(false);
 
   function loadTasks() {
+    try {
+      const logs = document.getElementById("logBody");
+      while (logs.firstChild) {
+        logs.removeChild(logs.firstChild);
+      };
+    }catch{}
+
     let getTasks = retrieveTask();
     getTasks.then((message) => {
       let taskArray = new Array(message);
@@ -61,8 +68,6 @@ const TaskTimer = () => {
     }
 
     await addTask(task, h, m);
-    loadTasks();
-
     setAddVisibility(!addVisibility);
   }
 
