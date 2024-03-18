@@ -23,6 +23,21 @@ declare namespace chrome {
     }
 }
 
+// chrome.storage.local.get() must be wrapped in a promise to allow await.
+const getResult = (taskKey: string) => {
+    return new Promise(resolve => {
+        chrome.storage.local.get(taskKey, result => {
+            if (chrome.runtime.lastError) {
+                console.error('Error checking for existing task:', chrome.runtime.lastError.message);
+                // Resolve with undefined in case of an error
+                resolve(undefined);
+            } else {
+                resolve(result[taskKey]);
+            }
+        });
+    });
+};
+
 // Function to add a task entry to storage
 // Function also checks if the key already exists, if so, task is not added.
 export async function addTask(taskName: string, taskHours: number, taskMinutes: number) {
@@ -35,23 +50,8 @@ export async function addTask(taskName: string, taskHours: number, taskMinutes: 
         minutes: taskMinutes,
     };
 
-    // chrome.storage.local.get() must be wrapped in a promise to allow await.
-    const getResult = () => {
-        return new Promise(resolve => {
-            chrome.storage.local.get(taskKey, result => {
-                if (chrome.runtime.lastError) {
-                    console.error('Error checking for existing task:', chrome.runtime.lastError.message);
-                    // Resolve with undefined in case of an error
-                    resolve(undefined);
-                } else {
-                    resolve(result[taskKey]);
-                }
-            });
-        });
-    };
-
     // Result is used later on, so await is used to ensure it contains the correct value.
-    const result = await getResult()
+    const result = await getResult(taskKey)
 
     // If the result's type is undefined, the key is not in use. Therefore, set the value.
     // Otherwise, do not set the value.
@@ -81,23 +81,8 @@ export async function editTask(taskName: string, taskHours: number, taskMinutes:
         minutes: taskMinutes,
     };
 
-    // chrome.storage.local.get() must be wrapped in a promise to allow await.
-    const getResult = () => {
-        return new Promise(resolve => {
-            chrome.storage.local.get(taskKey, result => {
-                if (chrome.runtime.lastError) {
-                    console.error('Error checking for existing task:', chrome.runtime.lastError.message);
-                    // Resolve with undefined in case of an error
-                    resolve(undefined);
-                } else {
-                    resolve(result[taskKey]);
-                }
-            });
-        });
-    };
-
     // Result is used later on, so await is used to ensure it contains the correct value.
-    const result = await getResult()
+    const result = await getResult(taskKey)
 
     // If the result's type is not undefined, the key is in use. Therefore, set the value as the new edit value.
     // Otherwise, the key is not in use. Log the error.
@@ -121,23 +106,8 @@ export async function removeTask(taskName: string) {
     // Concatenate 'task-' to uniquely identify task keys.
     const taskKey = 'task-' + taskName.toLowerCase();
 
-    // chrome.storage.local.get() must be wrapped in a promise to allow await.
-    const getResult = () => {
-        return new Promise(resolve => {
-            chrome.storage.local.get(taskKey, result => {
-                if (chrome.runtime.lastError) {
-                    console.error('Error checking for existing task:', chrome.runtime.lastError.message);
-                    // Resolve with undefined in case of an error
-                    resolve(undefined);
-                } else {
-                    resolve(result[taskKey]);
-                }
-            });
-        });
-    };
-
     // Result is used later on, so await is used to ensure it contains the correct value.
-    const result = await getResult()
+    const result = await getResult(taskKey)
 
     // If the result's type is not undefined, the key is in use. Therefore, the task can be removed.
     // Otherwise, the key is not in use, so the task can not be removed. Log the error.
@@ -169,21 +139,8 @@ export async function retrieveTask() {
 
 
 export async function getHoursMinutes(taskKey:string) {
-    const getResult = () => {
-        return new Promise(resolve => {
-            chrome.storage.local.get(taskKey, result => {
-                if (chrome.runtime.lastError) {
-                    console.error('Error checking for existing task:', chrome.runtime.lastError.message);
-                    // Resolve with undefined in case of an error
-                    resolve(undefined);
-                } else {
-                    resolve(result[taskKey]);
-                }
-            });
-        });
-    };
 
-    const result = await getResult();
+    const result = await getResult(taskKey);
 
     return result;
 }
