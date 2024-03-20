@@ -1,6 +1,6 @@
 // Define an interface for the duration entry, this will be stored as the value in the key-value storage.
 // This represents the duration of the task in hours and minutes.
-export interface Duration {
+interface Duration {
     hours: number;
     minutes: number;
 }
