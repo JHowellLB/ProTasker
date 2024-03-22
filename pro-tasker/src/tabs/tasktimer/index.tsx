@@ -31,12 +31,12 @@ const TaskTimer = () => {
         getTime.then((message) => {
           if (taskArray[i].substring(0,5) === "task-") {
             createRow(taskArray[i].substring(5), message.hours, message.minutes);
+            try {
+              let selection = document.createElement("option") as HTMLOptionElement;
+              selection.innerText = taskArray[i].substring(5);
+              document.getElementById("selectTask").appendChild(selection);
+              } catch {}
           }
-          try {
-          let selection = document.createElement("option") as HTMLOptionElement;
-          selection.innerText = taskArray[i].substring(5);
-          document.getElementById("selectTask").appendChild(selection);
-          } catch {}
         })
       }
     })
