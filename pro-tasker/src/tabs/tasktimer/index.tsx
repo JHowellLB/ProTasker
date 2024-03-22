@@ -1,5 +1,5 @@
 export {}
-import {addTask, editTask, retrieveTask, getHoursMinutes} from "../../api/taskDB"
+import {addTask, editTask, retrieveTask, removeTask, getHoursMinutes} from "../../api/taskDB"
 import React, {useState} from "react"
 import "./task_styles.css"
 
@@ -8,10 +8,17 @@ const TaskTimer = () => {
   const [editVisibility, setEditVisibility] = useState(false);
 
   function loadTasks() {
+    const logs = document.getElementById("logBody");
     try {
-      const logs = document.getElementById("logBody");
       while (logs.firstChild) {
         logs.removeChild(logs.firstChild);
+      };
+    }catch{}
+
+    const combo = document.getElementById("selectTask");
+    try {
+      while (combo.firstChild) {
+        combo.removeChild(combo.firstChild);
       };
     }catch{}
 
@@ -23,6 +30,11 @@ const TaskTimer = () => {
         let getTime = getHoursMinutes(taskArray[i]);
         getTime.then((message) => {
           createRow(taskArray[i], message.hours, message.minutes);
+          try {
+          let selection = document.createElement("option") as HTMLOptionElement;
+          selection.innerText = taskArray[i];
+          document.getElementById("selectTask").appendChild(selection);
+          } catch {}
         })
       }
     })
@@ -32,6 +44,7 @@ const TaskTimer = () => {
 
     const row = document.createElement("div");
     row.className = "row";
+    row.id = task;
 
     const ltask = document.createElement("div");
     ltask.innerText = task;
@@ -55,7 +68,7 @@ const TaskTimer = () => {
     document.getElementById("logBody").appendChild(row);
   }
 
-  async function Task() {
+  async function ATask() {
     // Get input values
     let task = (document.getElementById("task") as HTMLInputElement).value.trim();
     let h = parseInt((document.getElementById("hour") as HTMLInputElement).value);
@@ -71,6 +84,14 @@ const TaskTimer = () => {
     setAddVisibility(!addVisibility);
   }
 
+  async function DTask() {
+    let box = document.getElementById("selectTask") as HTMLSelectElement;
+    let delete_index = box.selectedIndex;
+    let delete_task = box.options[delete_index].text;
+    await removeTask(delete_task);
+
+    setEditVisibility(!editVisibility);
+  }
 
   loadTasks();
 
@@ -115,7 +136,7 @@ const TaskTimer = () => {
                 className="time"
                 type="text"
                 placeholder="Minutes"></input>
-              <input className="time" type="submit" value="Save" onClick={() => Task()}></input>
+              <input className="time" type="submit" value="Save" onClick={() => ATask()}></input>
             </div>
           </div>
         </div>
@@ -129,14 +150,17 @@ const TaskTimer = () => {
             </div>
           </div>
           <div>
-            <h3>Edit Name:</h3>
-            <input id="editTask" className="task_input" type="text" placeholder="Edit Name"></input>
+            <h3>Choose Task:</h3>
+              <form>
+                <select id="selectTask" className="comboBox">
+                </select>
+              </form> 
             <h3>Edit Timer:</h3>
             <div className="edit_input">
               <input id="editHour" className="time" type="text" placeholder="Hours"></input>
               <input id="editMinute" className="time" type="text" placeholder="Minutes" ></input>
               <input className="time" type="submit" value="Save" onClick={() => {}}></input>
-              <input className="time" type="submit" value="Delete" onClick={() => {}}></input>
+              <input className="time" type="submit" value="Delete" onClick={() => DTask()}></input>
             </div>
           </div>
         </div>
