@@ -35,7 +35,10 @@
       "identity",
       "identity.email",
       "tabs",
-      "storage"
+      "storage",
+      "alarms",
+      "notifications",
+      "scripts"
     ],
     "background": {
       "service_worker": "background"
