@@ -6,6 +6,8 @@ interface Duration {
     schedules: Schedule[];
 }
   
+// Example: day could be 'Monday', 'Tuesday', 'Saturday'
+// startTime should follow the format XX:XX AM/PM. Ex: '09:00 AM' or '10:30PM'
 export interface Schedule {
     day: string; // Maybe use an enum for days
     startTime: string;
@@ -32,7 +34,6 @@ const getResult = (blockedKey: string) => {
 export async function addBlocked(blockedSite: string, blockedHours: number, blockedMinutes: number, schedules: Schedule[]) {
     // Concatenate 'blocked-' to uniquely identify task keys.
     const blockedKey = 'blocked-' + blockedSite.toLowerCase();
-    console.log(schedules)
 
     // Create a duration object to store as the value
     const blockedDuration: Duration = {
@@ -57,5 +58,37 @@ export async function addBlocked(blockedSite: string, blockedHours: number, bloc
     }
     else {
         console.log('Blocked site key already exists: ', blockedKey)
+    }
+}
+
+// Function to edit a blocked website entry in storage
+// Function also checks if the key does not exist, if so, blocked website is not edited.
+export async function editBlocked(blockedSite: string, blockedHours: number, blockedMinutes: number, schedules: Schedule[]) {
+    // Concatenate 'blocked-' to uniquely identify task keys.
+    const blockedKey = 'blocked-' + blockedSite.toLowerCase();
+
+    // Create a duration object to store as the value
+    const blockedDuration: Duration = {
+        hours: blockedHours,
+        minutes: blockedMinutes,
+        schedules: schedules,
+    };
+
+    // Result is used later on, so await is used to ensure it contains the correct value.
+    const result = await getResult(blockedKey)
+
+    // If the result's type is not undefined, the key is in use. Therefore, set the value as the new edit value.
+    // Otherwise, the key is not in use. do not set the value. Log the error
+    if (typeof result != 'undefined') {
+        chrome.storage.local.set({ [blockedKey]: blockedDuration }, () => {
+            if (chrome.runtime.lastError) {
+                console.error('Error editing blocked site:', chrome.runtime.lastError);
+            } else {
+                console.log('Blocked site edited:', blockedKey);
+            }
+        });
+    }
+    else {
+        console.log('Blocked site key does not exist: ', blockedKey)
     }
 }
