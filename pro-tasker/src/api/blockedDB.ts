@@ -59,3 +59,26 @@ export async function addBlocked(blockedSite: string, blockedHours: number, bloc
         console.log('Blocked site key already exists: ', blockedKey)
     }
 }
+
+export async function removeBlocked(blockedSite: string) {
+    // Concatenate 'blocked-' to uniquely identify blocked  keys.
+    const blockedKey = 'blocked-' + blockedSite.toLowerCase();
+
+    // Result is used later on, so await is used to ensure it contains the correct value.
+    const result = await getResult(blockedKey)
+
+    // If the result's type is not undefined, the key is in use. Therefore, the task can be removed.
+    // Otherwise, the key is not in use, so the task can not be removed. Log the error.
+    if (typeof result != 'undefined') {
+        chrome.storage.local.remove( blockedKey , () => {
+            if (chrome.runtime.lastError) {
+                console.error('Error removing blocked website:', chrome.runtime.lastError);
+            } else {
+                console.log('Blocked website removed:', blockedKey);
+            }
+        });
+    }
+    else {
+        console.log('Blocked website key does not exist: ', blockedKey)
+    }
+}
