@@ -107,7 +107,7 @@ export async function editTask(
   if (typeof result != "undefined") {
     chrome.storage.local.set({ [taskKey]: taskDuration }, () => {
       if (chrome.runtime.lastError) {
-        console.error("Error adding task:", chrome.runtime.lastError)
+        console.error("Error editing task:", chrome.runtime.lastError)
       } else {
         console.log("Task edited:", taskKey)
       }
