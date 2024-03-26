@@ -31,6 +31,7 @@ const TaskTimer = () => {
         getTime.then((message) => {
           if (taskArray[i].substring(0,5) === "task-") {
             createRow(taskArray[i].substring(5), message.hours, message.minutes);
+            console.log(taskArray[i], message)
             try {
               let selection = document.createElement("option") as HTMLOptionElement;
               selection.innerText = taskArray[i].substring(5);
@@ -42,8 +43,7 @@ const TaskTimer = () => {
     })
   }
 
-  const createRow = (task:string, h:number, m:number) => {
-
+  const createRow = (task: string, h: number, m: number) => {
     const row = document.createElement("div");
     row.className = "row";
     row.id = task;
@@ -54,17 +54,26 @@ const TaskTimer = () => {
     const ltime = document.createElement("div");
     ltime.innerText = h + " : " + m;
     ltime.className = "timeEle";
-    const lplay = document.createElement("button");
+
+    const lplay = document.createElement("button")
     lplay.className = "PP";
-    const ledit = document.createElement("button");
-    ledit.className = "E";
-    ledit.addEventListener("click", function() {
-      setEditVisibility(true); 
-    });
+    lplay.addEventListener("click", function () {
+      chrome.storage.local.get(["task-" + task], (res) => {
+        chrome.storage.local.set({
+          isRunning: !res.isRunning
+        })
+      })
+    })
+
+    const ledit = document.createElement("button")
+    ledit.className = "E"
+    ledit.addEventListener("click", function () {
+      setEditVisibility(true)
+    })
 
     row.innerHTML += ltask.outerHTML;
     row.innerHTML += ltime.outerHTML;
-    row.innerHTML += lplay.outerHTML;
+    row.appendChild(lplay);
     row.appendChild(ledit);
 
     document.getElementById("logBody").appendChild(row);

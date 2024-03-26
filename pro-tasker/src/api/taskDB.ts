@@ -3,6 +3,7 @@
 interface Duration {
     hours: number;
     minutes: number;
+    isRunning: boolean;
 }
 
 // Type definition for the chrome object
@@ -40,7 +41,7 @@ const getResult = (taskKey: string) => {
 
 // Function to add a task entry to storage
 // Function also checks if the key already exists, if so, task is not added.
-export async function addTask(taskName: string, taskHours: number, taskMinutes: number) {
+export async function addTask(taskName: string, taskHours: number, taskMinutes: number, isRunning: boolean = false) {
     // Concatenate 'task-' to uniquely identify task keys.
     const taskKey = 'task-' + taskName.toLowerCase();
 
@@ -48,6 +49,7 @@ export async function addTask(taskName: string, taskHours: number, taskMinutes: 
     const taskDuration: Duration = {
         hours: taskHours,
         minutes: taskMinutes,
+        isRunning: isRunning,
     };
 
     // Result is used later on, so await is used to ensure it contains the correct value.
@@ -71,7 +73,7 @@ export async function addTask(taskName: string, taskHours: number, taskMinutes: 
 
 // Function to edit a task entry in storage
 // Function also checks if the key does not exist, if so, task is not edited.
-export async function editTask(taskName: string, taskHours: number, taskMinutes: number) {
+export async function editTask(taskName: string, taskHours: number, taskMinutes: number, isRunning: boolean = false) {
     // Concatenate 'task-' to uniquely identify task keys.
     const taskKey = 'task-' + taskName.toLowerCase();
 
@@ -79,6 +81,7 @@ export async function editTask(taskName: string, taskHours: number, taskMinutes:
     const taskDuration: Duration = {
         hours: taskHours,
         minutes: taskMinutes,
+        isRunning: isRunning,
     };
 
     // Result is used later on, so await is used to ensure it contains the correct value.
@@ -127,9 +130,9 @@ export async function removeTask(taskName: string) {
 
 
 
-export async function retrieveTask() {
+export async function retrieveTask(task = null) {
     return new Promise((resolve, reject) => {
-        chrome.storage.local.get(null, function(items) {
+        chrome.storage.local.get(task, function(items) {
             let allKeys = Object.keys(items)
             resolve(allKeys)
         })
