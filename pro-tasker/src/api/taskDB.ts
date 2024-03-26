@@ -4,6 +4,7 @@ interface Duration {
     hours: number;
     minutes: number;
     isRunning: boolean;
+    timer: number;
 }
 
 // Type definition for the chrome object
@@ -50,6 +51,7 @@ export async function addTask(taskName: string, taskHours: number, taskMinutes: 
         hours: taskHours,
         minutes: taskMinutes,
         isRunning: isRunning,
+        timer: 0
     };
 
     // Result is used later on, so await is used to ensure it contains the correct value.
@@ -82,6 +84,7 @@ export async function editTask(taskName: string, taskHours: number, taskMinutes:
         hours: taskHours,
         minutes: taskMinutes,
         isRunning: isRunning,
+        timer: 0
     };
 
     // Result is used later on, so await is used to ensure it contains the correct value.
