@@ -3,6 +3,8 @@
 interface Duration {
   hours: number
   minutes: number
+  isRunning: boolean
+  timer: number
 }
 
 // Type definition for the chrome object
@@ -54,7 +56,8 @@ const getResult = (taskKey: string) => {
 export async function addTask(
   taskName: string,
   taskHours: number,
-  taskMinutes: number
+  taskMinutes: number,
+  isRunning: boolean = false
 ) {
   // Concatenate 'task-' to uniquely identify task keys.
   const taskKey = "task-" + taskName.toLowerCase()
@@ -62,7 +65,9 @@ export async function addTask(
   // Create a duration object to store as the value
   const taskDuration: Duration = {
     hours: taskHours,
-    minutes: taskMinutes
+    minutes: taskMinutes,
+    isRunning: isRunning,
+    timer: 0
   }
 
   // Result is used later on, so await is used to ensure it contains the correct value.
@@ -88,7 +93,8 @@ export async function addTask(
 export async function editTask(
   taskName: string,
   taskHours: number,
-  taskMinutes: number
+  taskMinutes: number,
+  isRunning: boolean = false
 ) {
   // Concatenate 'task-' to uniquely identify task keys.
   const taskKey = "task-" + taskName.toLowerCase()
@@ -96,7 +102,9 @@ export async function editTask(
   // Create a duration object to store as the value
   const taskDuration: Duration = {
     hours: taskHours,
-    minutes: taskMinutes
+    minutes: taskMinutes,
+    isRunning: isRunning,
+    timer: 0
   }
 
   // Result is used later on, so await is used to ensure it contains the correct value.
@@ -141,9 +149,9 @@ export async function removeTask(taskName: string) {
   }
 }
 
-export async function retrieveTask() {
+export async function retrieveTask(task = null) {
   return new Promise((resolve, reject) => {
-    chrome.storage.local.get(null, function (items) {
+    chrome.storage.local.get(task, function (items) {
       let allKeys = Object.keys(items)
       resolve(allKeys)
     })

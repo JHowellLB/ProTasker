@@ -37,8 +37,7 @@
       "tabs",
       "storage",
       "alarms",
-      "notifications",
-      "scripts"
+      "notifications"
     ],
     "background": {
       "service_worker": "background"

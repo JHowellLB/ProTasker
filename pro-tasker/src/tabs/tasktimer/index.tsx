@@ -40,6 +40,7 @@ const TaskTimer = () => {
         getTime.then((message) => {
           if (taskArray[i].substring(0, 5) === "task-") {
             createRow(taskArray[i].substring(5), message.hours, message.minutes)
+            console.log(taskArray[i], message)
             try {
               let selection = document.createElement(
                 "option"
@@ -64,15 +65,25 @@ const TaskTimer = () => {
     const ltime = document.createElement("div")
     ltime.innerText = h + " : " + m
     ltime.className = "timeEle"
+
     const lplay = document.createElement("button")
     lplay.className = "PP"
     lplay.addEventListener("click", function () {
-      chrome.storage.local.get(["isRunning"], (res) => {
+      chrome.storage.local.get([`task-${task}`], (res) => {
+        // console.log("result", res["task-" + task])
+        console.log(res)
+        const original = { ...res }
+        const originalTask = res[`task-${task}`]
         chrome.storage.local.set({
-          isRunning: !res.isRunning
+          ...original,
+          [`task-${task}`]: {
+            ...originalTask,
+            isRunning: !originalTask.isRunning
+          }
         })
       })
     })
+
     const ledit = document.createElement("button")
     ledit.className = "E"
     ledit.addEventListener("click", function () {
