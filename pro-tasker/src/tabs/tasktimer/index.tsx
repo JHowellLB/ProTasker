@@ -16,6 +16,30 @@ const TaskTimer = () => {
   const [addVisibility, setAddVisibility] = useState(false)
   const [editVisibility, setEditVisibility] = useState(false)
 
+  function loadTimes() {
+    let getTasks = retrieveTask()
+    getTasks.then((message) => {
+      let taskArray = new Array(message)
+      taskArray = taskArray[0]
+      for (let i = 0; i < taskArray.length; i++) {
+        let getTime = getHoursMinutes(taskArray[i])
+        getTime.then((message) => {
+          if (taskArray[i].substring(0, 5) === "task-") {
+
+            const timeRemaining = (((message.hours * 60) + message.minutes) * 60) - message.timer;
+            const hour = Math.floor(timeRemaining / 3600)
+            const min = Math.floor(timeRemaining / 60) % 60
+            const sec = timeRemaining % 60
+
+            const t = document.getElementById(taskArray[i].substring(5) + "&timeEle")
+            t.innerText = hour + " : " + min + " : " + sec
+
+          }
+        })
+      }
+    })
+  }
+
   function loadTasks() {
     const logs = document.getElementById("logBody")
     try {
@@ -39,8 +63,8 @@ const TaskTimer = () => {
         let getTime = getHoursMinutes(taskArray[i])
         getTime.then((message) => {
           if (taskArray[i].substring(0, 5) === "task-") {
-            createRow(taskArray[i].substring(5), message.hours, message.minutes)
-            console.log(taskArray[i], message)
+            createRow(taskArray[i].substring(5), message.hours, message.minutes, message.timer)
+            // console.log(taskArray[i], message)
             try {
               let selection = document.createElement(
                 "option"
@@ -54,7 +78,7 @@ const TaskTimer = () => {
     })
   }
 
-  const createRow = (task: string, h: number, m: number) => {
+  const createRow = (task: string, h: number, m: number, spent:number) => {
     const row = document.createElement("div")
     row.className = "row"
     row.id = task
@@ -62,9 +86,15 @@ const TaskTimer = () => {
     const ltask = document.createElement("div")
     ltask.innerText = task
     ltask.className = "logEle"
+
     const ltime = document.createElement("div")
-    ltime.innerText = h + " : " + m
+    const timeRemaining = (((h * 60) + m) * 60) - spent;
+    const hour = Math.floor(timeRemaining / 3600)
+    const min = Math.floor(timeRemaining / 60) % 60
+    const sec = timeRemaining % 60
+    ltime.innerText = hour + " : " + min + " : " + sec
     ltime.className = "timeEle"
+    ltime.id = task + "&timeEle"
 
     const lplay = document.createElement("button")
     lplay.className = "PP"
@@ -137,7 +167,8 @@ const TaskTimer = () => {
     setEditVisibility(!editVisibility)
   }
 
-  loadTasks()
+  loadTasks();
+  setInterval(loadTimes, 1000);
 
   return (
     <section>
