@@ -14,7 +14,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
         chrome.storage.local.get([task], async (res) => {
           const original = { ...res }
           const originalTask = res[task]
-          console.log(res[task])
+          //console.log(res[task])
           if (res[task].isRunning) {
             chrome.storage.local.set({
               ...original,

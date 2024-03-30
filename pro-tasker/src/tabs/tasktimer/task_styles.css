@@ -24,8 +24,7 @@
 
 .row {
     display: grid;
-    grid-template-columns: 12rem 5rem 2rem 2rem;
-    column-gap: 2rem;
+    grid-template-columns: 13rem 11rem 5.5rem 2rem;
     text-overflow:ellipsis;
     overflow: hidden;
     
@@ -41,17 +40,17 @@
 
 .timeEle {
     font-size: 1rem;
+    width: 7rem;
     color: white;
     text-align: right;
     padding-top: 0.5rem;
-    padding-left:1.5rem;
     padding-bottom: 0.5rem; 
     justify-content: right;
+
 }
 
 .PP {
     cursor: pointer;
-    margin-left:3rem;
     width: 2rem;
     height: 2rem;
     background: url("../../../assets/playButton.png");
@@ -61,7 +60,6 @@
 
 .E {
     cursor: pointer;
-    margin-left:4.4rem;
     width: 2rem;
     height: 2rem;
     background: url("../../../assets/editButton.png");
