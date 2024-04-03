@@ -25,15 +25,19 @@ const TaskTimer = () => {
         let getTime = getHoursMinutes(taskArray[i])
         getTime.then((message) => {
           if (taskArray[i].substring(0, 5) === "task-") {
+            const timeRemaining =
+              (message.hours * 60 + message.minutes) * 60 - message.timer
+            const hour = `${Math.floor(timeRemaining / 3600)}`.padStart(2, "0")
+            const min = `${Math.floor(timeRemaining / 60) % 60}`.padStart(
+              2,
+              "0"
+            )
+            const sec = `${timeRemaining % 60}`.padStart(2, "0")
 
-            const timeRemaining = (((message.hours * 60) + message.minutes) * 60) - message.timer;
-            const hour = Math.floor(timeRemaining / 3600)
-            const min = Math.floor(timeRemaining / 60) % 60
-            const sec = timeRemaining % 60
-
-            const t = document.getElementById(taskArray[i].substring(5) + "&timeEle")
-            t.innerText = hour + " : " + min + " : " + sec
-
+            const t = document.getElementById(
+              taskArray[i].substring(5) + "&timeEle"
+            )
+            t.innerText = `${hour}:${min}:${sec}`
           }
         })
       }
@@ -63,7 +67,12 @@ const TaskTimer = () => {
         let getTime = getHoursMinutes(taskArray[i])
         getTime.then((message) => {
           if (taskArray[i].substring(0, 5) === "task-") {
-            createRow(taskArray[i].substring(5), message.hours, message.minutes, message.timer)
+            createRow(
+              taskArray[i].substring(5),
+              message.hours,
+              message.minutes,
+              message.timer
+            )
             // console.log(taskArray[i], message)
             try {
               let selection = document.createElement(
@@ -78,7 +87,7 @@ const TaskTimer = () => {
     })
   }
 
-  const createRow = (task: string, h: number, m: number, spent:number) => {
+  const createRow = (task: string, h: number, m: number, spent: number) => {
     const row = document.createElement("div")
     row.className = "row"
     row.id = task
@@ -88,11 +97,13 @@ const TaskTimer = () => {
     ltask.className = "logEle"
 
     const ltime = document.createElement("div")
-    const timeRemaining = (((h * 60) + m) * 60) - spent;
-    const hour = Math.floor(timeRemaining / 3600)
-    const min = Math.floor(timeRemaining / 60) % 60
-    const sec = timeRemaining % 60
-    ltime.innerText = hour + " : " + min + " : " + sec
+    const timeRemaining = (h * 60 + m) * 60 - spent
+    const hour = `${Math.floor(timeRemaining / 3600)}`.padStart(2, "0")
+    const min = `${Math.floor(timeRemaining / 60) % 60}`.padStart(2, "0")
+    const sec = `${timeRemaining % 60}`.padStart(2, "0")
+
+    ltime.innerText = `${hour}:${min}:${sec}`
+
     ltime.className = "timeEle"
     ltime.id = task + "&timeEle"
 
@@ -101,7 +112,7 @@ const TaskTimer = () => {
     lplay.addEventListener("click", function () {
       chrome.storage.local.get([`task-${task}`], (res) => {
         // console.log("result", res["task-" + task])
-        console.log(res)
+        // console.log(res)
         const original = { ...res }
         const originalTask = res[`task-${task}`]
         chrome.storage.local.set({
@@ -167,8 +178,8 @@ const TaskTimer = () => {
     setEditVisibility(!editVisibility)
   }
 
-  loadTasks();
-  setInterval(loadTimes, 1000);
+  loadTasks()
+  setInterval(loadTimes, 1000)
 
   return (
     <section>
