@@ -1,5 +1,5 @@
 // Define an interface for the duration entry, this will be stored as the value in the key-value storage.
-// This represents the duration of the task in hours and minutes.
+// This represents the duration a website will be blocked in hours and minutes.
 interface Duration {
   hours: number
   minutes: number
@@ -40,7 +40,6 @@ export async function addBlocked(
 ) {
   // Concatenate 'blocked-' to uniquely identify task keys.
   const blockedKey = "blocked-" + blockedSite.toLowerCase()
-  console.log(schedules)
 
   // Create a duration object to store as the value
   const blockedDuration: Duration = {
