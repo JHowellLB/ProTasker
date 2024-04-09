@@ -2,22 +2,17 @@
 interface Duration {
   hours: number
   minutes: number
+  timer: number
+  isRunning: boolean
 }
 
-// This represents the entire weeks worth of data from monday to sunday. This is stored as the value in the key-value storage.
-export interface WeeklyDuration {
-  monday : Duration
-  tuesday : Duration
-  wednesday : Duration
-  thursday : Duration
-  friday : Duration
-  saturday : Duration
-  sunday : Duration
+interface mostUsedDaily {
+  [website : string]: Duration
 }
 
 // chrome.storage.local.get() must be wrapped in a promise to allow await.
 const getResult = (mostUsedKey: string) => {
-  return new Promise<WeeklyDuration>((resolve) => {
+  return new Promise((resolve) => {
     chrome.storage.local.get(mostUsedKey, (result) => {
       if (chrome.runtime.lastError) {
         console.error(
@@ -33,101 +28,105 @@ const getResult = (mostUsedKey: string) => {
   })
 }
 
-// Function to add a most used website.
-// Function only creates a value for the specified day.
-// Function also checks if the key already exists, if so, task is not added.
+// Function to add a most used website for a specified day.
+// Function also checks if the website entry already exists for that specific day, if so, website is not added.
 // Can potentially use an enum for days since it is a fixed set of values.
 export async function addMostUsed(website: string, hours: number, minutes: number, day: string) {
-  // Concatenate 'mostUsed-' to uniquely identify task keys.
-  const websiteKey = "mostused-" + website.toLowerCase()
+  // Use the lowercase value for the key.
+  const websiteKey = website.toLowerCase()
 
-  const mostUsedDaily: Duration = {
+  const mostUsedDuration: Duration = {
     hours: hours,
     minutes: minutes,
+    timer: 0,
+    isRunning: false
   }
 
-  // Create a duration object with all durations initialized to 0.
-  const weeklyDuration: WeeklyDuration = {
-    monday: { hours: 0, minutes: 0, },
-    tuesday: { hours: 0, minutes: 0, },
-    wednesday: { hours: 0, minutes: 0, },
-    thursday: { hours: 0, minutes: 0, },
-    friday: { hours: 0, minutes: 0, },
-    saturday: { hours: 0, minutes: 0, },
-    sunday: { hours: 0, minutes: 0, }
+  const mostUsedDaily: mostUsedDaily = { 
+    [websiteKey] : mostUsedDuration
   }
-
-  // Use the spread operator to create a new interface that has the single added value.
-  const mostUsedWeekly = {
-    ...weeklyDuration,
-    [day]: mostUsedDaily
-};
 
   // Result is used later on, so await is used to ensure it contains the correct value.
-  const result = await getResult(websiteKey)
+  const result = await getResult(day)
 
-  // If the result's type is undefined, the key is not in use. Therefore, set the value.
-  // Otherwise, do not set the value.
+  // If the result's type is undefined, the day is not in use. Therefore, initialize the day with the single website.
+  // Otherwise, append the value to the list of values.
   if (typeof result === "undefined") {
-    chrome.storage.local.set({ [websiteKey]: mostUsedWeekly }, () => {
+    chrome.storage.local.set({ [day]: mostUsedDaily }, () => {
       if (chrome.runtime.lastError) {
         console.error("Error adding most used site:", chrome.runtime.lastError)
       } else {
         console.log("Most used site added:", websiteKey)
       }
     })
-  } else {
-    console.log("Most used site key already exists: ", websiteKey)
+  } 
+  else {
+    // Since there already exists values in day, check if the website being entered already exists.
+    // If it doesn't, append it to the list of websites.
+    if (typeof result[websiteKey] === "undefined"){
+      chrome.storage.local.set({ [day]: {...result, [websiteKey] : mostUsedDuration } }, () => {
+        if (chrome.runtime.lastError) {
+          console.error("Error adding most used site:", chrome.runtime.lastError)
+        } else {
+          console.log("Most used site added:", websiteKey)
+        }
+      })
+    }
+    else {
+      console.log("Most used site key already exists: ", websiteKey)
+    }
   }
 }
 
 // Function to add to add time to a most used website.
 // Function adds time for the specified day.
 export async function addTimeToMostUsed(website: string, hours: number, minutes: number, day: string) {
-  // Concatenate 'mostUsed-' to uniquely identify task keys.
-  const websiteKey = "mostused-" + website.toLowerCase()
+  const websiteKey = website.toLowerCase()
 
   // Result is used later on, so await is used to ensure it contains the correct value.
-  const result = await getResult(websiteKey)
+  const result = await getResult(day)
 
-  // If the result's type is not undefined, the key is in use. Therefore, update the value.
+  // If the result's type is not undefined, the day key exists.
   // Otherwise, do not update the value.
   if (typeof result != "undefined") {
-    const currentDuration = result[day]
+    // Check if the website entry exists for the specified day.
+    if (typeof result[websiteKey] != "undefined") {
+      const currentDuration = result[website]
 
-    let updatedHours = 0
-    let updatedMinutes = 0
+      let updatedHours = 0
+      let updatedMinutes = 0
 
-    // Add the times
-    // Ensure that minutes do not exceed 59.
-    if (currentDuration.minutes + minutes >= 60) {
-      updatedHours = currentDuration.hours + hours + 1
-      updatedMinutes = currentDuration.minutes + minutes - 60
+      // Add the times
+      // Ensure that minutes do not exceed 59.
+      if (currentDuration.minutes + minutes >= 60) {
+        updatedHours = currentDuration.hours + hours + 1
+        updatedMinutes = currentDuration.minutes + minutes - 60
+      }
+      else {
+        updatedHours = currentDuration.hours + hours
+        updatedMinutes = currentDuration.minutes + minutes
+      }
+
+      const updatedDuration: Duration = {
+        hours: updatedHours,
+        minutes: updatedMinutes,
+        timer: 0,
+        isRunning: false
+      }
+
+      chrome.storage.local.set({ [day]: {...result, [websiteKey] : updatedDuration } }, () => {
+        if (chrome.runtime.lastError) {
+          console.error("Error adding time to most used site:", chrome.runtime.lastError)
+        } else {
+          console.log("Most used site time updated:", websiteKey)
+        }
+      })
     }
     else {
-      updatedHours = currentDuration.hours + hours
-      updatedMinutes = currentDuration.minutes + minutes
+      console.log("Most used site key does not exist: ", websiteKey)
     }
-
-    const updatedDuration: Duration = {
-      hours: updatedHours,
-      minutes: updatedMinutes
-    }
-
-    // Spread operator is used to update the current day's value while maintaining old values.
-    const weeklyDuration = {
-      ...result,
-      [day]: updatedDuration
-    }
-
-    chrome.storage.local.set({ [websiteKey]: weeklyDuration }, () => {
-      if (chrome.runtime.lastError) {
-        console.error("Error adding time to most used site:", chrome.runtime.lastError)
-      } else {
-        console.log("Most used site time updated:", websiteKey)
-      }
-    })
-  } else {
-    console.log("Most used site key does not exist: ", websiteKey)
+  }
+  else {
+    console.log("Day key does not exist: ", websiteKey)
   }
 }
