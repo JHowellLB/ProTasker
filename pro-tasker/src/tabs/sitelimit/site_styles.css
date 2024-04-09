@@ -1,0 +1,287 @@
+.addSite {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top:0.75rem;
+  margin-left:1rem;
+  font-size:1rem;
+  background-color:#657786;
+  font-family: Arial;
+  color:white;
+  width:6.5rem;
+  height:1.75rem;
+  border-radius:0.5rem;
+}
+
+.siteLog {
+  height: 13rem;
+  margin: 1rem;
+  background-color: #AAB8C2;
+  border-radius: 1rem;
+  overflow-y: auto;
+}
+
+#logBody > div {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 10px;
+}
+
+.siteLogHeader {
+  display: grid;
+  grid-template-columns: 10.7rem 10.6rem 8.3rem 2rem;
+  padding-left: 2rem;
+  padding-right: 6rem;
+  color: #657786;
+  position: sticky;
+  top: 0;
+  background-color: #AAB8C2;
+  z-index: 1;
+  border-bottom: 1px solid #657786;
+  margin-bottom: 8px;
+  height: 2.5rem;
+}
+
+.popup {
+  position: fixed;
+  top: 5rem;
+  left: 5rem;
+  width: 25rem;
+  height: 13rem;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  z-index: 2; /* Adjusted z-index */
+}
+
+.popUpHeader {
+  display: flex;
+  justify-content:space-between;
+  background-color:#E2E1E1;
+}
+
+h3 {
+  padding-left:1.5rem;
+  padding-right:6.5rem;
+  font-family: Arial;
+  font-size: 13px;
+}
+
+.closeBox {
+  cursor: pointer;
+  margin-top:0.75rem;
+  width:2rem;
+  height:2rem;
+  font-family: Arial;
+  font-size:16px;
+}
+
+.site_input {
+  margin-left:1.5rem;
+  padding:0.2rem;
+  border-radius: .25rem;
+  border:1px solid #ccc;
+  width:15rem;
+}
+
+.time_input {
+  padding-left:1.5rem;
+  display: flex;
+  justify-content:space-between;
+  padding-right:8rem;
+}
+
+.comboBox {
+  margin-left: 1.5rem;
+  border-radius: 0.4rem;
+  padding: 0.2rem;
+  width:10rem;
+}
+
+.edit_input {
+  padding-left:1.5rem;
+  display: flex;
+  justify-content:space-between;
+  padding-right:2.8rem;
+}
+
+.time {
+  cursor: pointer;
+  border-radius: .5rem;
+  padding:0.25rem;
+  border:1px solid #ccc;
+  width:3.5rem;
+} 
+
+/* Scrollbar Styles */
+.taskLog::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+
+.taskLog::-webkit-scrollbar-thumb {
+  background-color: #657786;
+  border-radius: 10px;
+}
+
+.taskLog::-webkit-scrollbar-thumb:hover {
+  background-color: #546A7B;
+}
+
+/* Add Website Popup */
+.sitePopup {
+  position: fixed;
+  top: 3rem;
+  left: 5rem;
+  width: 25rem;
+  height: 17rem;
+  flex-shrink: 0;
+  border-radius: 1.25rem;
+  border-style: solid;
+  border-width: thin;
+  border-color: black;
+  background: #FFF;
+  z-index: 2;
+}
+
+.sitePopupHeader {
+  display: flex;
+  justify-content: space-between;
+  background: #E2E1E1;
+}
+
+.schedule {
+  display: flex;
+  align-items: center;
+}
+
+.addScheduleButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: bold;
+  margin-left: .75rem;
+  margin-top: .5rem;
+  margin-right: .25rem;
+  border-radius: 50%;
+  width: .75rem;
+  height: .75rem;
+  background-color: #E2E1E1;
+}
+
+.scheduleLabel {
+  font-family: Arial;
+  font-size: 12px;
+  padding-left: -1rem;
+  margin-top: .5rem;
+  font-weight: bold;
+}
+
+.scheduleTable {
+  display: flex; /* Align items in a row */
+  flex-direction: column;
+  overflow-x: auto; /* Enable horizontal scrolling */
+  width: 23rem;
+  margin-left: 1rem;
+  background-color: #E2E1E1;
+  border-radius: 1rem;
+  z-index: 2;
+  height: 4.25rem;
+}
+
+
+.scheduleHeader {
+  display: grid;
+  margin-left: 1rem;
+  grid-template-columns: 6rem 10rem;
+  z-index: 2;
+}
+
+.dayInputField {
+  width: 70px;
+  padding-right: 0px;
+  margin-left: .5rem;
+  margin-right: 2rem;
+}
+
+.timeInputField {
+  width: 20px;
+
+}
+.scheduleInputField {
+  width: 50px;
+}
+
+.scheduleItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Align items vertically in the center */
+  margin-bottom: 10px;
+}
+
+.scheduleItem span:first-child {
+  flex-grow: 1; /* Allow the first span (day) to grow */
+}
+
+.scheduleItem span:last-child {
+  flex-basis: 50%; /* Set a base width for the last span (time) */
+  text-align: right; /* Align the time to the right */
+}
+
+.scheduleDay {
+  margin-left: 10px;
+}
+
+.scheduleTime {
+  font-size: 12px;
+  position: relative;
+  left: -180px;
+}
+
+.websiteText {
+  margin-left: 30px;
+}
+
+.timerText {
+  margin-left: 90px;
+}
+
+.scheduleText {
+  margin-right: 20px;
+  max-height: 30px;
+  overflow-y: auto;
+}
+
+.activateButton {
+  display: block;
+  width: 40px;
+  height: 10px;
+  font-size: 8px;
+  text-align: center;
+  margin-right: 70px;
+}
+
+.editButton {
+  width: 20px;
+  height: 20px;
+  margin-right: 40px;
+}
+
+/* Scrollbar Styles */
+.scheduleText::-webkit-scrollbar {
+width: 10px;
+background: transparent;
+}
+
+.scheduleText::-webkit-scrollbar-thumb {
+background-color: black;
+border-radius: 10px;
+}
+
+.scheduleText::-webkit-scrollbar-thumb:hover {
+background-color: #546A7B;
+}
