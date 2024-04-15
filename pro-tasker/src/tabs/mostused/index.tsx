@@ -1,4 +1,4 @@
-import DailyWeekly from "~components/DailyWeekly/DailyWeekly"
+import DailyWeekly from "~components/DailyWeekly/DailyWeeklyMost"
 
 const MostUsed = () => {
   return (
