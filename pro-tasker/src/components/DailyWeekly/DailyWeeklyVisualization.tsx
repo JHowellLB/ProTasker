@@ -2,7 +2,7 @@ import "./dailyweekly.css"
 
 import { useState } from "react"
 
-const DailyWeekly = () => {
+const DailyWeeklyVisualization = () => {
   const [btn, setBtn] = useState("daily")
 
   const handleButtonClick = (btn: string) => {
@@ -30,4 +30,4 @@ const DailyWeekly = () => {
   )
 }
 
-export default DailyWeekly
+export default DailyWeeklyVisualization

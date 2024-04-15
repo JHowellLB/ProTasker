@@ -1,9 +1,9 @@
-import DailyWeekly from "~components/DailyWeekly/DailyWeekly"
+import DailyWeeklyVisualization from "~components/DailyWeekly/DailyWeeklyVisualization"
 
 const Visualization = () => {
   return (
     <section>
-      <DailyWeekly />
+      <DailyWeeklyVisualization />
     </section>
   )
 }
