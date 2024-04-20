@@ -4,6 +4,8 @@ export {}
 console.log("background")
 var domain = "inactive"
 var day = new Date().getDay().toString()
+const hour = new Date().getHours()
+const min = new Date().getMinutes()
 chrome.alarms.create("taskTimer", {
   periodInMinutes: 1 / 60
 })
@@ -94,6 +96,14 @@ chrome.alarms.onAlarm.addListener((alarm) => {
           [day]: { ...result[day], [domain]: 1 + currentTime }
         })
       })
+    }
+
+    // clear local storage at the start of the week (monday)
+    // idk if this works
+    if (hour === 12 && min === 0 && day === "1") {
+      for (let i = 1; i <= 7; i++) {
+        chrome.storage.local.remove([i.toString()])
+      }
     }
   }
 })
