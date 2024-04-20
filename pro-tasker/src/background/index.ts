@@ -2,13 +2,35 @@ import { retrieveTask } from "~api/taskDB"
 
 export {}
 console.log("background")
-var domain = 'inactive'
-var day = new Date().getDay().toString();
+var domain = "inactive"
+var day = new Date().getDay().toString()
 chrome.alarms.create("taskTimer", {
   periodInMinutes: 1 / 60
 })
-chrome.alarms.create('mostUsedTimer', {
+chrome.alarms.create("mostUsedTimer", {
   periodInMinutes: 1 / 60
+})
+
+// Listen for the onInstalled event
+chrome.runtime.onInstalled.addListener(function (details) {
+  // Check if the reason is 'install' or 'update'
+  if (details.reason === "install" || details.reason === "update") {
+    // Initialize data for numbers 1-7 in Chrome's local storage
+    const initialData = {}
+    for (let i = 1; i < parseInt(day); i++) {
+      initialData[i.toString()] = {}
+    }
+    chrome.storage.local.set(initialData, function () {
+      if (chrome.runtime.lastError) {
+        console.error(
+          "Error initializing local storage:",
+          chrome.runtime.lastError
+        )
+      } else {
+        console.log("Local storage initialized successfully.")
+      }
+    })
+  }
 })
 
 chrome.alarms.onAlarm.addListener((alarm) => {
@@ -40,35 +62,38 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 })
 
 //set current website to local storage to initialize into DB
-chrome.tabs.onActivated.addListener(function(activeInfo) {
-  chrome.tabs.get(activeInfo.tabId, function(tab) {
-    domain = new URL(tab.url).hostname;
-    if (domain.endsWith(".com")){
-      day = new Date().getDay().toString();
+chrome.tabs.onActivated.addListener(function (activeInfo) {
+  chrome.tabs.get(activeInfo.tabId, function (tab) {
+    domain = new URL(tab.url).hostname
+    if (domain.endsWith(".com")) {
+      day = new Date().getDay().toString()
       chrome.storage.local.get(day, (result) => {
         // Check if the entire day does not have an entry
-        if (typeof result === "undefined"){
-          chrome.storage.local.set({ [day]: {[domain] : 0 } })
+        if (typeof result === "undefined") {
+          chrome.storage.local.set({ [day]: { [domain]: 0 } })
         }
+        //idk if we need this part of the code
+
         // Check if the website domain has not been entered.
-        else if (typeof result[domain] === "undefined"){
-          chrome.storage.local.set({ [day]: {...result[day], [domain] : 0 } })
-        }
+        // else if (typeof result[domain] === "undefined") {
+        //   chrome.storage.local.set({ [day]: { ...result[day], [domain]: 0 } })
+        // }
       })
-    }
-    else {
+    } else {
       domain = "inactive"
     }
-  });
-});
+  })
+})
 
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === "mostUsedTimer") {
     if (domain != "inactive") {
       chrome.storage.local.get(day, (result) => {
         const currentTime = result[day][domain]
-        chrome.storage.local.set({ [day]: {...result[day], [domain] : 1 + currentTime} })
+        chrome.storage.local.set({
+          [day]: { ...result[day], [domain]: 1 + currentTime }
+        })
       })
     }
   }
-});
+})

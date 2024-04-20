@@ -1,47 +1,65 @@
 import "./dailyweekly.css"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const DailyWeeklyMost = () => {
   const [btn, setBtn] = useState("daily")
-  const [dailyWebsites, setDailyWebsites] = useState([])
-  const [weeklyWebsites, setWeeklyWebsites] = useState([])
+  const [dailyWebsites, setDailyWebsites] = useState([]) // address 125: [{chrome:0}]
+  const [weeklyWebsites, setWeeklyWebsites] = useState({})
   const day = new Date().getDay().toString()
 
   const handleButtonClick = (btn: string) => {
     setBtn(btn)
   }
   const parseWebsitesDaily = async () => {
+    let newDailyWebsites = [...dailyWebsites]
     const dailyWebsitesPromise = await chrome.storage.local.get(day)
     const dailyWebsitesStringify = JSON.stringify(dailyWebsitesPromise[day])
     const dailyWebsitesParse = JSON.parse(dailyWebsitesStringify)
     for (const [key, value] of Object.entries(dailyWebsitesParse)) {
-      const exists = dailyWebsites.some((site) => site.key === key)
+      const exists = newDailyWebsites.some((site) => site.key === key)
       if (!exists) {
-        dailyWebsites.push({ key, value })
-        setDailyWebsites(dailyWebsites)
+        newDailyWebsites.push({ key, value })
       }
     }
+    setDailyWebsites(newDailyWebsites)
   }
 
   const parseWebsitesWeekly = async () => {
+    // Create a copy of the current state
+    let newWeeklyWebsites = { ...weeklyWebsites }
+
+    // Loop through each day
     for (let i = 1; i <= parseInt(day); i++) {
-      const dailyWebsitesPromise = await chrome.storage.local.get(i.toString())
-      const dailyWebsitesStringify = JSON.stringify(
-        dailyWebsitesPromise[i.toString()]
+      // Retrieve websites data for the current day from storage
+      const weeklyWebsitesPromise = await chrome.storage.local.get(i.toString())
+      const weeklyWebsitesStringify = JSON.stringify(
+        weeklyWebsitesPromise[i.toString()]
       )
-      const dailyWebsitesParse = JSON.parse(dailyWebsitesStringify)
+      const dailyWebsitesParse = JSON.parse(weeklyWebsitesStringify)
+
+      // Loop through the websites data for the current day
       for (const [key, value] of Object.entries(dailyWebsitesParse)) {
-        const exists = weeklyWebsites.some((site) => site.key === key)
-        if (!exists) {
-          weeklyWebsites.push({ key, value })
-          setWeeklyWebsites(weeklyWebsites)
+        // Check if the key already exists in the state
+        if (newWeeklyWebsites.hasOwnProperty(key)) {
+          // If the key exists, update its value by adding the new value
+          newWeeklyWebsites[key] += value
+        } else {
+          // If the key does not exist, add it to the state with the new value
+          newWeeklyWebsites[key] = value
         }
       }
     }
+    setWeeklyWebsites(newWeeklyWebsites)
   }
-  parseWebsitesDaily()
-  parseWebsitesWeekly()
+  useEffect(() => {
+    if (btn === "daily") {
+      parseWebsitesDaily()
+    }
+  }, [btn])
+  useEffect(() => {
+    parseWebsitesWeekly()
+  }, [])
   return (
     <div>
       <section className="dailyWeeklyWrapper">
@@ -64,22 +82,34 @@ const DailyWeeklyMost = () => {
         </div>
       </section>
       {btn === "daily" ? (
-        <div>
+        <div className="dataWrapper">
           {dailyWebsites
             .sort((a, b) => b.value - a.value) // Sort the array in descending order based on value
             .map((site, index) => (
-              <div key={index}>
-                {site.key} {site.value}
+              <div key={index} className="websiteData">
+                {site.key}
+                <div>
+                  {`${Math.floor(site.value / 3600)}`.padStart(2, "0")}h{" "}
+                  {`${Math.floor(site.value / 60) % 60}`.padStart(2, "0")}m{" "}
+                  {`${site.value % 60}`.padStart(2, "0")}s
+                </div>
               </div>
             ))}
         </div>
       ) : (
-        <div>
-          {weeklyWebsites
-            .sort((a, b) => b.value - a.value) // Sort the array in descending order based on value
-            .map((site, index) => (
-              <div key={index}>
-                {site.key} {site.value}
+        <div className="dataWrapper">
+          {Object.entries(weeklyWebsites)
+            .sort(([, valueA], [, valueB]) => valueB - valueA) // Sort the entries in descending order based on value
+            .map(([key, value], index) => (
+              <div key={index} className="websiteData">
+                {key}
+                <div>
+                  <div>
+                    {`${Math.floor(value / 3600)}`.padStart(2, "0")}h{" "}
+                    {`${Math.floor(value / 60) % 60}`.padStart(2, "0")}m{" "}
+                    {`${value % 60}`.padStart(2, "0")}s
+                  </div>
+                </div>
               </div>
             ))}
         </div>
