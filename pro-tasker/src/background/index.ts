@@ -98,10 +98,10 @@ chrome.alarms.onAlarm.addListener((alarm) => {
         })
       })
     }
-
+    console.log(hour)
     // clear local storage at the start of the week (monday)
     // idk if this works
-    if (hour === 12 && min === 0 && day === "1") {
+    if (hour === 0 && min === 0 && day === "1") {
       for (let i = 1; i <= 7; i++) {
         chrome.storage.local.remove([i.toString()])
       }
