@@ -26,13 +26,11 @@ const DailyWeeklyMost = () => {
 
   const parseWebsitesWeekly = async () => {
     for (let i = 1; i <= parseInt(day); i++) {
-      // console.log("hi")
       const dailyWebsitesPromise = await chrome.storage.local.get(i.toString())
       const dailyWebsitesStringify = JSON.stringify(
         dailyWebsitesPromise[i.toString()]
       )
       const dailyWebsitesParse = JSON.parse(dailyWebsitesStringify)
-      console.log(dailyWebsitesParse)
       for (const [key, value] of Object.entries(dailyWebsitesParse)) {
         const exists = weeklyWebsites.some((site) => site.key === key)
         if (!exists) {
