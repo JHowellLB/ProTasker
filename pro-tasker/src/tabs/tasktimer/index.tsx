@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
 import {
   addTask,
@@ -179,7 +179,14 @@ const TaskTimer = () => {
   }
 
   loadTasks()
-  setInterval(loadTimes, 1000)
+
+  useEffect(() => {
+    const loadTimesInterval = setInterval(loadTimes, 1000)
+
+    return () => {
+      clearInterval(loadTimesInterval)
+    }
+  }, [])
 
   return (
     <section>
