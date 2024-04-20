@@ -71,14 +71,13 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
     if (domain.endsWith(".com")) {
       day = new Date().getDay().toString()
       chrome.storage.local.get(day, (result) => {
+        console.log("here", typeof result[day])
         // Check if the entire day does not have an entry
-        if (typeof result === "undefined") {
+        if (typeof result[day] === "undefined") {
           chrome.storage.local.set({ [day]: { [domain]: 0 } })
         }
-        //idk if we need this part of the code
-
         // Check if the website domain has not been entered.
-        else if (typeof result[domain] === "undefined") {
+        else if (typeof result[day][domain] === "undefined") {
           chrome.storage.local.set({ [day]: { ...result[day], [domain]: 0 } })
         }
       })
@@ -98,12 +97,12 @@ chrome.alarms.onAlarm.addListener((alarm) => {
         })
       })
     }
-    console.log(hour)
     // clear local storage at the start of the week (monday)
     // idk if this works
     if (hour === 0 && min === 0 && day === "1") {
       for (let i = 1; i <= 7; i++) {
         chrome.storage.local.remove([i.toString()])
+        chrome.storage.local.set([i.toString()])
       }
     }
   }
