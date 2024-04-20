@@ -16,6 +16,7 @@ chrome.alarms.create("mostUsedTimer", {
 // Listen for the onInstalled event
 chrome.runtime.onInstalled.addListener(function (details) {
   // Check if the reason is 'install' or 'update'
+  console.log(details)
   if (details.reason === "install" || details.reason === "update") {
     // Initialize data for numbers 1-7 in Chrome's local storage
     const initialData = {}
@@ -77,9 +78,9 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
         //idk if we need this part of the code
 
         // Check if the website domain has not been entered.
-        // else if (typeof result[domain] === "undefined") {
-        //   chrome.storage.local.set({ [day]: { ...result[day], [domain]: 0 } })
-        // }
+        else if (typeof result[domain] === "undefined") {
+          chrome.storage.local.set({ [day]: { ...result[day], [domain]: 0 } })
+        }
       })
     } else {
       domain = "inactive"
