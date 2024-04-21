@@ -126,3 +126,15 @@ export async function removeBlocked(blockedSite: string) {
     console.log("Blocked website key does not exist: ", blockedKey)
   }
 }
+
+// Instructions:
+//  1. Do const keys = retrievedBlocked()
+//  2. For each key iterated, do const contents = retrieveBlocked(key)
+export async function retrieveBlocked(blocked = null) {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get(blocked, function (items) {
+      let allKeys = Object.keys(items)
+      resolve(allKeys)
+    })
+  })
+}
