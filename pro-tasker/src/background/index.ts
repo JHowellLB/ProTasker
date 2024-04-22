@@ -16,11 +16,10 @@ chrome.alarms.create("mostUsedTimer", {
 // Listen for the onInstalled event
 chrome.runtime.onInstalled.addListener(function (details) {
   // Check if the reason is 'install' or 'update'
-  console.log(details)
   if (details.reason === "install" || details.reason === "update") {
     // Initialize data for numbers 1-7 in Chrome's local storage
     const initialData = {}
-    for (let i = 1; i < parseInt(day); i++) {
+    for (let i = 0; i < parseInt(day); i++) {
       initialData[i.toString()] = {}
     }
     chrome.storage.local.set(initialData, function () {
@@ -71,7 +70,6 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
     if (domain.endsWith(".com")) {
       day = new Date().getDay().toString()
       chrome.storage.local.get(day, (result) => {
-        console.log("here", typeof result[day])
         // Check if the entire day does not have an entry
         if (typeof result[day] === "undefined") {
           chrome.storage.local.set({ [day]: { [domain]: 0 } })
@@ -97,10 +95,12 @@ chrome.alarms.onAlarm.addListener((alarm) => {
         })
       })
     }
-    // clear local storage at the start of the week (monday)
+    // clear local storage at the start of the week (sunday)
     // idk if this works
-    if (hour === 0 && min === 0 && day === "1") {
-      for (let i = 1; i <= 7; i++) {
+    console.log(hour, min, day)
+    if (hour == 19 && min == 16 && day == "0") {
+      console.log("here")
+      for (let i = 0; i <= 6; i++) {
         chrome.storage.local.remove([i.toString()])
         chrome.storage.local.set([i.toString()])
       }
