@@ -19,7 +19,7 @@ chrome.runtime.onInstalled.addListener(function (details) {
   if (details.reason === "install" || details.reason === "update") {
     // Initialize data for numbers 1-7 in Chrome's local storage
     const initialData = {}
-    for (let i = 0; i < parseInt(day); i++) {
+    for (let i = 0; i <= parseInt(day); i++) {
       initialData[i.toString()] = {}
     }
     chrome.storage.local.set(initialData, function () {
@@ -85,7 +85,7 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
   })
 })
 
-chrome.alarms.onAlarm.addListener((alarm) => {
+chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name === "mostUsedTimer") {
     if (domain != "inactive") {
       chrome.storage.local.get(day, (result) => {
@@ -97,13 +97,31 @@ chrome.alarms.onAlarm.addListener((alarm) => {
     }
     // clear local storage at the start of the week (sunday)
     // idk if this works
-    console.log(hour, min, day)
-    if (hour == 19 && min == 16 && day == "0") {
-      console.log("here")
-      for (let i = 0; i <= 6; i++) {
-        chrome.storage.local.remove([i.toString()])
-        chrome.storage.local.set([i.toString()])
+    if (hour == 0 && min == 0 && day == "0") {
+      for (let i = 0; i <= 7; i++) {
+        if (
+          Object.keys(await chrome.storage.local.get([i.toString()])).length > 0
+        ) {
+          chrome.storage.local.remove([i.toString()])
+        }
       }
+    }
+    if (hour == 0 && min == 1 && day == "0") {
+      // Initialize data for numbers 1-7 in Chrome's local storage
+      const newData = {}
+      for (let i = 0; i <= parseInt(day); i++) {
+        newData[i.toString()] = {}
+      }
+      chrome.storage.local.set(newData, function () {
+        if (chrome.runtime.lastError) {
+          console.error(
+            "Error initializing local storage:",
+            chrome.runtime.lastError
+          )
+        } else {
+          console.log("Local storage initialized successfully.")
+        }
+      })
     }
   }
 })
