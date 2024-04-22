@@ -14,13 +14,18 @@ chrome.alarms.create("mostUsedTimer", {
 })
 
 // Listen for the onInstalled event
-chrome.runtime.onInstalled.addListener(function (details) {
+chrome.runtime.onInstalled.addListener(async function (details) {
   // Check if the reason is 'install' or 'update'
   if (details.reason === "install" || details.reason === "update") {
     // Initialize data for numbers 1-7 in Chrome's local storage
     const initialData = {}
     for (let i = 0; i <= parseInt(day); i++) {
-      initialData[i.toString()] = {}
+      console.log(i)
+      if (
+        Object.keys(await chrome.storage.local.get([i.toString()])).length == 0
+      ) {
+        initialData[i.toString()] = {}
+      }
     }
     chrome.storage.local.set(initialData, function () {
       if (chrome.runtime.lastError) {
