@@ -30,7 +30,7 @@ const DailyWeeklyMost = () => {
     let newWeeklyWebsites = { ...weeklyWebsites }
 
     // Loop through each day
-    for (let i = 1; i <= parseInt(day); i++) {
+    for (let i = 0; i <= parseInt(day); i++) {
       // Retrieve websites data for the current day from storage
       const weeklyWebsitesPromise = await chrome.storage.local.get(i.toString())
       const weeklyWebsitesStringify = JSON.stringify(
