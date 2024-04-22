@@ -72,7 +72,28 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 chrome.tabs.onActivated.addListener(function (activeInfo) {
   chrome.tabs.get(activeInfo.tabId, function (tab) {
     domain = new URL(tab.url).hostname
-    if (domain.endsWith(".com")) {
+    if (domain.includes(".")) {
+      day = new Date().getDay().toString()
+      chrome.storage.local.get(day, (result) => {
+        // Check if the entire day does not have an entry
+        if (typeof result[day] === "undefined") {
+          chrome.storage.local.set({ [day]: { [domain]: 0 } })
+        }
+        // Check if the website domain has not been entered.
+        else if (typeof result[day][domain] === "undefined") {
+          chrome.storage.local.set({ [day]: { ...result[day], [domain]: 0 } })
+        }
+      })
+    } else {
+      domain = "inactive"
+    }
+  })
+})
+
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+  chrome.tabs.get(tabId, function (tab) {
+    domain = new URL(tab.url).hostname
+    if (domain.includes(".")) {
       day = new Date().getDay().toString()
       chrome.storage.local.get(day, (result) => {
         // Check if the entire day does not have an entry
