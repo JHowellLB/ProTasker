@@ -85,3 +85,12 @@
   flex-direction: column;
   width: 50%;
 }
+
+.websiteIcons{
+  display: flex;
+  align-items: center;
+  gap: 0.5rem
+}
+.icons{
+  border-radius: 100rem;
+}
