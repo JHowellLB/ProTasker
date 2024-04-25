@@ -1,28 +1,31 @@
 import "./dailyweekly.css"
 
-import { useEffect, useState } from "react"
-
-import VisualizationChart from "./visualizationChart"
+import Chart from "chart.js/auto"
+import { useEffect, useRef, useState } from "react"
 
 const DailyWeeklyVisualization = () => {
   const [btn, setBtn] = useState("daily")
 
-  const [dailyWebsites, setDailyWebsites] = useState([]) // address 125: [{chrome:0}]
-  const [weeklyWebsites, setWeeklyWebsites] = useState({})
+  const [chartBtn, setChartBtn] = useState("pie")
+
+  const [dailyWebsites, setDailyWebsites] = useState({}).sort()
+  const [weeklyWebsites, setWeeklyWebsites] = useState({}).sort()
   const day = new Date().getDay().toString()
 
   const handleButtonClick = (btn: string) => {
     setBtn(btn)
   }
+  const handleChartButtonClick = (btn: string) => {
+    setChartBtn(btn)
+  }
   const parseWebsitesDaily = async () => {
-    let newDailyWebsites = [...dailyWebsites]
+    let newDailyWebsites = { ...dailyWebsites }
     const dailyWebsitesPromise = await chrome.storage.local.get(day)
     const dailyWebsitesStringify = JSON.stringify(dailyWebsitesPromise[day])
     const dailyWebsitesParse = JSON.parse(dailyWebsitesStringify)
     for (const [key, value] of Object.entries(dailyWebsitesParse)) {
-      const exists = newDailyWebsites.some((site) => site.key === key)
-      if (!exists) {
-        newDailyWebsites.push({ key, value })
+      if (!newDailyWebsites[key]) {
+        newDailyWebsites[key] = value
       }
     }
     setDailyWebsites(newDailyWebsites)
@@ -63,6 +66,17 @@ const DailyWeeklyVisualization = () => {
   useEffect(() => {
     parseWebsitesWeekly()
   }, [])
+  useEffect(() => {
+    if (btn === "daily") {
+      parseWebsitesDaily()
+    }
+  }, [btn])
+  useEffect(() => {
+    parseWebsitesWeekly()
+  }, [])
+  const getFaviconUrl = (domain) =>
+    `https://www.google.com/s2/favicons?domain=${domain}`
+
   return (
     <div>
       <section className="dailyWeeklyWrapper">
@@ -86,20 +100,46 @@ const DailyWeeklyVisualization = () => {
       <div className="visualizeData">
         <div className="chartData">
           Chart Goes Here
-          <VisualizationChart />
+          <section className="dailyWeeklyWrapper">
+            <div className="dailyWeekly">
+              <div
+                onClick={() => handleChartButtonClick("pie")}
+                className={
+                  chartBtn === "pie" ? "dailyweeklyBtnActive" : "dailyweeklyBtn"
+                }>
+                Pie Chart
+              </div>
+              <div
+                onClick={() => handleChartButtonClick("bar")}
+                className={
+                  chartBtn === "bar" ? "dailyweeklyBtnActive" : "dailyweeklyBtn"
+                }>
+                Bar Chart
+              </div>
+            </div>
+          </section>
         </div>
         <div className="visualizeWebsiteData">
           {btn === "daily" ? (
             <div className="dataWrapper">
-              {dailyWebsites
-                .sort((a, b) => b.value - a.value) // Sort the array in descending order based on value
-                .map((site, index) => (
+              {Object.entries(dailyWebsites)
+                .sort(([, valueA], [, valueB]) => valueB - valueA)
+                .map(([key, value], index) => (
                   <div key={index} className="websiteData">
-                    {site.key}
+                    <div className="websiteIcons">
+                      <img
+                        src={getFaviconUrl(key)}
+                        alt={`${key} favicon`}
+                        className="icons"
+                      />
+                      {key}
+                    </div>
                     <div>
-                      {`${Math.floor(site.value / 3600)}`.padStart(2, "0")}h{" "}
-                      {`${Math.floor(site.value / 60) % 60}`.padStart(2, "0")}m{" "}
-                      {`${site.value % 60}`.padStart(2, "0")}s
+                      <div>
+                        {`${Math.floor(value / 3600)}`.padStart(2, "0")}h{" "}
+                        {`${Math.floor(value / 60) % 60}`.padStart(2, "0")}m{" "}
+                        {`${value % 60}`.padStart(2, "0")}s
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -107,10 +147,17 @@ const DailyWeeklyVisualization = () => {
           ) : (
             <div className="dataWrapper">
               {Object.entries(weeklyWebsites)
-                .sort(([, valueA], [, valueB]) => valueB - valueA) // Sort the entries in descending order based on value
+                .sort(([, valueA], [, valueB]) => valueB - valueA)
                 .map(([key, value], index) => (
                   <div key={index} className="websiteData">
-                    {key}
+                    <div className="websiteIcons">
+                      <img
+                        src={getFaviconUrl(key)}
+                        alt={`${key} favicon`}
+                        className="icons"
+                      />
+                      {key}
+                    </div>
                     <div>
                       <div>
                         {`${Math.floor(value / 3600)}`.padStart(2, "0")}h{" "}
