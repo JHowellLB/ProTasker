@@ -5,7 +5,7 @@ console.log("background")
 var domain = "inactive"
 var day = new Date().getDay().toString()
 // activeTabId needed for the onUpdated listener
-var activeTabId = null; 
+var activeTabId = null
 const hour = new Date().getHours()
 const min = new Date().getMinutes()
 chrome.alarms.create("taskTimer", {
@@ -73,45 +73,46 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 // Function to handle URL extraction and storage
 function handleTab(tab) {
   if (tab && tab.url) {
-      var tabUrl;
-      try {
-          tabUrl = new URL(tab.url).hostname;
-      } catch (error) {
-          // Handle invalid URLs or URLs not fully loaded
-          tabUrl = "invalid";
-      }
-      if (tabUrl !== "invalid") {
-          domain = tabUrl;
-          if (domain.includes(".")) {
-              day = new Date().getDay().toString();
-              chrome.storage.local.get(day, (result) => {
-                  if (typeof result[day] === "undefined") {
-                      chrome.storage.local.set({ [day]: { [domain]: 0 } });
-                  } else if (typeof result[day][domain] === "undefined") {
-                      chrome.storage.local.set({ [day]: { ...result[day], [domain]: 0 } });
-                  }
-              });
-          } else {
-              domain = "inactive";
+    var tabUrl
+    try {
+      tabUrl = new URL(tab.url).hostname
+    } catch (error) {
+      // Handle invalid URLs or URLs not fully loaded
+      tabUrl = "invalid"
+    }
+    if (tabUrl !== "invalid") {
+      domain = tabUrl
+      if (domain.includes(".")) {
+        day = new Date().getDay().toString()
+        chrome.storage.local.get(day, (result) => {
+          if (typeof result[day] === "undefined") {
+            chrome.storage.local.set({ [day]: { [domain]: 0 } })
+          } else if (typeof result[day][domain] === "undefined") {
+            chrome.storage.local.set({ [day]: { ...result[day], [domain]: 0 } })
           }
+        })
+      } else {
+        domain = "inactive"
       }
+    }
   }
 }
 
 // Handle tab activation
-chrome.tabs.onActivated.addListener(function(activeInfo) {
-  activeTabId = activeInfo.tabId; // Update active tab ID
-  chrome.tabs.get(activeTabId, function(tab) {
-      handleTab(tab);
-  });
-});
+chrome.tabs.onActivated.addListener(function (activeInfo) {
+  activeTabId = activeInfo.tabId // Update active tab ID
+  chrome.tabs.get(activeTabId, function (tab) {
+    handleTab(tab)
+  })
+})
 
 // Handle tab updates
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-  if (tabId === activeTabId && changeInfo.status === 'complete') { // Check if the updated tab is the active tab
-      handleTab(tab);
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+  if (tabId === activeTabId && changeInfo.status === "complete") {
+    // Check if the updated tab is the active tab
+    handleTab(tab)
   }
-});
+})
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name === "mostUsedTimer") {
