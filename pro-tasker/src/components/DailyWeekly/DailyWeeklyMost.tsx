@@ -60,6 +60,8 @@ const DailyWeeklyMost = () => {
   useEffect(() => {
     parseWebsitesWeekly()
   }, [])
+  console.log(weeklyWebsites)
+
   return (
     <div>
       <section className="dailyWeeklyWrapper">

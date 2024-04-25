@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react"
+import { CgPlayButtonO } from "react-icons/cg"
+import { FaEdit } from "react-icons/fa"
 
 import {
   addTask,
@@ -10,134 +12,142 @@ import {
 
 import "./task_styles.css"
 
-export {}
+import { parse } from "path"
 
 const TaskTimer = () => {
   const [addVisibility, setAddVisibility] = useState(false)
   const [editVisibility, setEditVisibility] = useState(false)
+  const [taskList, setTaskList] = useState([])
 
-  function loadTimes() {
-    let getTasks = retrieveTask()
-    getTasks.then((message) => {
-      let taskArray = new Array(message)
-      taskArray = taskArray[0]
-      for (let i = 0; i < taskArray.length; i++) {
-        let getTime = getHoursMinutes(taskArray[i])
-        getTime.then((message) => {
-          if (taskArray[i].substring(0, 5) === "task-") {
-            const timeRemaining =
-              (message.hours * 60 + message.minutes) * 60 - message.timer
-            const hour = `${Math.floor(timeRemaining / 3600)}`.padStart(2, "0")
-            const min = `${Math.floor(timeRemaining / 60) % 60}`.padStart(
-              2,
-              "0"
-            )
-            const sec = `${timeRemaining % 60}`.padStart(2, "0")
-
-            const t = document.getElementById(
-              taskArray[i].substring(5) + "&timeEle"
-            )
-            t.innerText = `${hour}:${min}:${sec}`
-          }
-        })
-      }
-    })
+  const handleEdit = (edit) => {
+    setEditVisibility(!edit)
   }
 
-  function loadTasks() {
-    const logs = document.getElementById("logBody")
-    try {
-      while (logs.firstChild) {
-        logs.removeChild(logs.firstChild)
-      }
-    } catch {}
-
-    const combo = document.getElementById("selectTask")
-    try {
-      while (combo.firstChild) {
-        combo.removeChild(combo.firstChild)
-      }
-    } catch {}
-
-    let getTasks = retrieveTask()
-    getTasks.then((message) => {
-      let taskArray = new Array(message)
-      taskArray = taskArray[0]
-      for (let i = 0; i < taskArray.length; i++) {
-        let getTime = getHoursMinutes(taskArray[i])
-        getTime.then((message) => {
-          if (taskArray[i].substring(0, 5) === "task-") {
-            createRow(
-              taskArray[i].substring(5),
-              message.hours,
-              message.minutes,
-              message.timer
-            )
-            // console.log(taskArray[i], message)
-            try {
-              let selection = document.createElement(
-                "option"
-              ) as HTMLOptionElement
-              selection.innerText = taskArray[i].substring(5)
-              document.getElementById("selectTask").appendChild(selection)
-            } catch {}
-          }
-        })
-      }
-    })
+  const handleAdd = (add) => {
+    setAddVisibility(!add)
   }
+  // function loadTimes() {
+  //   let getTasks = retrieveTask()
+  //   getTasks.then((message) => {
+  //     let taskArray = new Array(message)
+  //     taskArray = taskArray[0]
+  //     for (let i = 0; i < taskArray.length; i++) {
+  //       let getTime = getHoursMinutes(taskArray[i])
+  //       getTime.then((message) => {
+  //         if (taskArray[i].substring(0, 5) === "task-") {
+  //           const timeRemaining =
+  //             (message.hours * 60 + message.minutes) * 60 - message.timer
+  //           const hour = `${Math.floor(timeRemaining / 3600)}`.padStart(2, "0")
+  //           const min = `${Math.floor(timeRemaining / 60) % 60}`.padStart(
+  //             2,
+  //             "0"
+  //           )
+  //           const sec = `${timeRemaining % 60}`.padStart(2, "0")
 
-  const createRow = (task: string, h: number, m: number, spent: number) => {
-    const row = document.createElement("div")
-    row.className = "row"
-    row.id = task
+  //           const t = document.getElementById(
+  //             taskArray[i].substring(5) + "&timeEle"
+  //           )
+  //           t.innerText = `${hour}:${min}:${sec}`
+  //         }
+  //       })
+  //     }
+  //   })
+  // }
 
-    const ltask = document.createElement("div")
-    ltask.innerText = task
-    ltask.className = "logEle"
+  // function loadTasks() {
+  //   const logs = document.getElementById("logBody")
+  //   try {
+  //     while (logs.firstChild) {
+  //       logs.removeChild(logs.firstChild)
+  //     }
+  //   } catch {}
 
-    const ltime = document.createElement("div")
-    const timeRemaining = (h * 60 + m) * 60 - spent
-    const hour = `${Math.floor(timeRemaining / 3600)}`.padStart(2, "0")
-    const min = `${Math.floor(timeRemaining / 60) % 60}`.padStart(2, "0")
-    const sec = `${timeRemaining % 60}`.padStart(2, "0")
+  //   const combo = document.getElementById("selectTask")
+  //   try {
+  //     while (combo.firstChild) {
+  //       combo.removeChild(combo.firstChild)
+  //     }
+  //   } catch {}
 
-    ltime.innerText = `${hour}:${min}:${sec}`
+  //   let getTasks = retrieveTask()
+  //   getTasks.then((message) => {
+  //     let taskArray = new Array(message)
+  //     taskArray = taskArray[0]
+  //     for (let i = 0; i < taskArray.length; i++) {
+  //       let getTime = getHoursMinutes(taskArray[i])
+  //       getTime.then((message) => {
+  //         if (taskArray[i].substring(0, 5) === "task-") {
+  //           createRow(
+  //             taskArray[i].substring(5),
+  //             message.hours,
+  //             message.minutes,
+  //             message.timer
+  //           )
+  //           // console.log(taskArray[i], message)
+  //           try {
+  //             let selection = document.createElement(
+  //               "option"
+  //             ) as HTMLOptionElement
+  //             selection.innerText = taskArray[i].substring(5)
+  //             document.getElementById("selectTask").appendChild(selection)
+  //           } catch {}
+  //         }
+  //       })
+  //     }
+  //   })
+  // }
 
-    ltime.className = "timeEle"
-    ltime.id = task + "&timeEle"
+  // const createRow = (task: string, h: number, m: number, spent: number) => {
+  //   const row = document.createElement("div")
+  //   row.className = "row"
+  //   row.id = task
 
-    const lplay = document.createElement("button")
-    lplay.className = "PP"
-    lplay.addEventListener("click", function () {
-      chrome.storage.local.get([`task-${task}`], (res) => {
-        // console.log("result", res["task-" + task])
-        // console.log(res)
-        const original = { ...res }
-        const originalTask = res[`task-${task}`]
-        chrome.storage.local.set({
-          ...original,
-          [`task-${task}`]: {
-            ...originalTask,
-            isRunning: !originalTask.isRunning
-          }
-        })
-      })
-    })
+  //   const ltask = document.createElement("div")
+  //   ltask.innerText = task
+  //   ltask.className = "logEle"
 
-    const ledit = document.createElement("button")
-    ledit.className = "E"
-    ledit.addEventListener("click", function () {
-      setEditVisibility(true)
-    })
+  //   const ltime = document.createElement("div")
+  //   const timeRemaining = (h * 60 + m) * 60 - spent
+  //   const hour = `${Math.floor(timeRemaining / 3600)}`.padStart(2, "0")
+  //   const min = `${Math.floor(timeRemaining / 60) % 60}`.padStart(2, "0")
+  //   const sec = `${timeRemaining % 60}`.padStart(2, "0")
 
-    row.innerHTML += ltask.outerHTML
-    row.innerHTML += ltime.outerHTML
-    row.appendChild(lplay)
-    row.appendChild(ledit)
+  //   ltime.innerText = `${hour}:${min}:${sec}`
 
-    document.getElementById("logBody").appendChild(row)
-  }
+  //   ltime.className = "timeEle"
+  //   ltime.id = task + "&timeEle"
+
+  //   const lplay = document.createElement("button")
+  //   lplay.className = "PP"
+  //   lplay.addEventListener("click", function () {
+  //     chrome.storage.local.get([`task-${task}`], (res) => {
+  //       // console.log("result", res["task-" + task])
+  //       // console.log(res)
+  //       const original = { ...res }
+  //       const originalTask = res[`task-${task}`]
+  //       chrome.storage.local.set({
+  //         ...original,
+  //         [`task-${task}`]: {
+  //           ...originalTask,
+  //           isRunning: !originalTask.isRunning
+  //         }
+  //       })
+  //     })
+  //   })
+
+  //   const ledit = document.createElement("button")
+  //   ledit.className = "E"
+  //   ledit.addEventListener("click", function () {
+  //     setEditVisibility(true)
+  //   })
+
+  //   row.innerHTML += ltask.outerHTML
+  //   row.innerHTML += ltime.outerHTML
+  //   row.appendChild(lplay)
+  //   row.appendChild(ledit)
+
+  //   document.getElementById("logBody").appendChild(row)
+  // }
 
   async function ATask() {
     // Get input values
@@ -166,7 +176,6 @@ const TaskTimer = () => {
     }
 
     await addTask(task, h, m)
-    setAddVisibility(!addVisibility)
   }
 
   async function DTask() {
@@ -174,23 +183,39 @@ const TaskTimer = () => {
     let delete_index = box.selectedIndex
     let delete_task = box.options[delete_index].text
     await removeTask(delete_task)
-
-    setEditVisibility(!editVisibility)
   }
 
-  loadTasks()
+  const parseTaskList = async () => {
+    const newTaskList = [...taskList]
+    const retrieveData = await chrome.storage.local.get()
+    for (const task in retrieveData) {
+      if (task.startsWith("task-")) {
+        const taskData = await chrome.storage.local.get(task)
+        newTaskList[task.substring(5)] = taskData[task]
+      }
+    }
+    setTaskList(newTaskList)
+  }
 
+  // loadTasks()
+
+  // useEffect(() => {
+  //   const loadTimesInterval = setInterval(loadTimes, 1000)
+
+  //   return () => {
+  //     clearInterval(loadTimesInterval)
+  //   }
+  // }, [])
   useEffect(() => {
-    const loadTimesInterval = setInterval(loadTimes, 1000)
-
+    const loadTimesInterval = setInterval(parseTaskList, 1000)
     return () => {
       clearInterval(loadTimesInterval)
     }
   }, [])
-
+  console.log(taskList)
   return (
     <section>
-      <div className="addTask" onClick={() => setAddVisibility(!addVisibility)}>
+      {/* <div className="addTask" onClick={() => setAddVisibility(!addVisibility)}>
         + Add Task
       </div>
       <div className="taskLog">
@@ -279,7 +304,130 @@ const TaskTimer = () => {
             </div>
           </div>
         </div>
+      )} */}
+      {addVisibility && (
+        <div id="popup" className="popup">
+          <div className="popUpHeader">
+            <h3 className="titleLabel">Add Task</h3>
+            <div
+              className="closeBox"
+              onClick={() => setAddVisibility(!addVisibility)}>
+              X
+            </div>
+          </div>
+          <div>
+            <h3>Task Name:</h3>
+            <input
+              id="task"
+              className="task_input"
+              type="text"
+              placeholder="Input Name"></input>
+            <h3>Task Timer:</h3>
+            <div className="time_input">
+              <input
+                id="hour"
+                className="time"
+                type="text"
+                placeholder="Hours"></input>
+              <input
+                id="minute"
+                className="time"
+                type="text"
+                placeholder="Minutes"></input>
+              <input
+                className="time"
+                type="submit"
+                value="Save"
+                onClick={() => ATask()}></input>
+            </div>
+          </div>
+        </div>
       )}
+      {editVisibility ? (
+        <div id="editPopup" className="popup">
+          <div className="popUpHeader">
+            <h3 className="titleLabel">Edit Task</h3>
+            <div className="closeBox" onClick={() => setEditVisibility(false)}>
+              X
+            </div>
+          </div>
+          <div>
+            <h3>Choose Task:</h3>
+            <form>
+              <select id="selectTask" className="comboBox"></select>
+            </form>
+            <h3>Edit Timer:</h3>
+            <div className="edit_input">
+              <input
+                id="editHour"
+                className="time"
+                type="text"
+                placeholder="Hours"></input>
+              <input
+                id="editMinute"
+                className="time"
+                type="text"
+                placeholder="Minutes"></input>
+              <input
+                className="time"
+                type="submit"
+                value="Save"
+                onClick={() => {}}></input>
+              <input
+                className="time"
+                type="submit"
+                value="Delete"
+                onClick={() => DTask()}></input>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div></div>
+      )}
+      <div onClick={() => handleAdd(addVisibility)} className="addSite">
+        Add Website
+      </div>
+      <div className="taskTimerContainer">
+        <div className="taskTimerHeaders">
+          <div className="taskTimerName">Website</div>
+          <div className="taskTimerTime">Timer</div>
+          <div className="taskTimerPlay">Play/Pause</div>
+          <div className="taskTimerEdit">Edit</div>
+        </div>
+        {Object.entries(taskList).map(([task, taskData], index) => (
+          <div key={index} className="taskData">
+            <div className="taskName">{task}</div>
+            <div className="timer">
+              <div>
+                {`${Math.floor(((taskData.hours * 60 + taskData.minutes) * 60) / 3600)}`.padStart(
+                  2,
+                  "0"
+                )}
+                {":"}
+                {`${Math.floor((((taskData.hours * 60 + taskData.minutes) * 60) / 60) % 60)}`.padStart(
+                  2,
+                  "0"
+                )}
+                {":"}
+                {`${Math.floor(((taskData.hours * 60 + taskData.minutes) * 60) % 60)}`.padStart(
+                  2,
+                  "0"
+                )}
+              </div>
+            </div>
+            <div className="buttons">
+              <CgPlayButtonO size={28} />
+            </div>
+            <div
+              onClick={() => {
+                handleEdit(editVisibility)
+              }}
+              className="buttons">
+              <FaEdit size={28} />
+            </div>
+          </div>
+        ))}
+      </div>
     </section>
   )
 }

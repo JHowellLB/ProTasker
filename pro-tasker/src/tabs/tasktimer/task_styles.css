@@ -1,169 +1,242 @@
 .addTask {
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top:0.75rem;
-    margin-left:1rem;
-    font-size:1rem;
-    background-color:#657786;
-    font-family: Arial;
-    color:white;
-    width:6.5rem;
-    height:1.75rem;
-    border-radius:0.5rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0.75rem;
+  margin-left: 1rem;
+  font-size: 1rem;
+  background-color: #657786;
+  font-family: Arial;
+  color: white;
+  width: 6.5rem;
+  height: 1.75rem;
+  border-radius: 0.5rem;
 }
 
 .taskLog {
-    height: 13rem;
-    margin: 1rem;
-    background-color: #AAB8C2;
-    border-radius: 1rem;
-    overflow-y: auto;
+  height: 13rem;
+  margin: 1rem;
+  background-color: #aab8c2;
+  border-radius: 1rem;
+  overflow-y: auto;
 }
 
 .row {
-    display: grid;
-    grid-template-columns: 13rem 11rem 5.5rem 2rem;
-    text-overflow:ellipsis;
-    overflow: hidden;
-    
+  display: grid;
+  grid-template-columns: 13rem 11rem 5.5rem 2rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .logEle {
-    font-size: 1rem;
-    color: white;
-    padding-top: 0.5rem;
-    padding-left:1.5rem;
-    padding-bottom: 0.5rem; 
+  font-size: 1rem;
+  color: white;
+  padding-top: 0.5rem;
+  padding-left: 1.5rem;
+  padding-bottom: 0.5rem;
 }
 
 .timeEle {
-    font-size: 1rem;
-    width: 7rem;
-    color: white;
-    text-align: right;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem; 
-    justify-content: right;
-
+  font-size: 1rem;
+  width: 7rem;
+  color: white;
+  text-align: right;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  justify-content: right;
 }
 
 .PP {
-    cursor: pointer;
-    width: 2rem;
-    height: 2rem;
-    background: url("../../../assets/playButton.png");
-    background-size: 100% 100%;
-    border:none;
+  cursor: pointer;
+  width: 2rem;
+  height: 2rem;
+  background: url("../../../assets/playButton.png");
+  background-size: 100% 100%;
+  border: none;
 }
 
 .E {
-    cursor: pointer;
-    width: 2rem;
-    height: 2rem;
-    background: url("../../../assets/editButton.png");
-    background-size: 100% 100%;
-    border:none;
+  cursor: pointer;
+  width: 2rem;
+  height: 2rem;
+  background: url("../../../assets/editButton.png");
+  background-size: 100% 100%;
+  border: none;
 }
 
 .logHeader {
-    display: grid;
-    grid-template-columns: 14.7rem 6.6rem 6.3rem 2rem;
-    padding-left: 2rem;
-    padding-right: 6rem;
-    color: #657786;
-    position: sticky;
-    top: 0;
-    background-color: #AAB8C2;
-    z-index: 1;
-    border-bottom: 1px solid #657786;
-    margin-bottom: 8px;
-    height: 2.5rem;
+  display: grid;
+  grid-template-columns: 14.7rem 6.6rem 6.3rem 2rem;
+  padding-left: 2rem;
+  padding-right: 6rem;
+  color: #657786;
+  position: sticky;
+  top: 0;
+  background-color: #aab8c2;
+  z-index: 1;
+  border-bottom: 1px solid #657786;
+  margin-bottom: 8px;
+  height: 2.5rem;
 }
 
 .popup {
-    position: fixed;
-    top: 5rem;
-    left: 5rem;
-    width: 25rem;
-    height: 13rem;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 0.5rem;
-    z-index: 2; /* Adjusted z-index */
+  position: fixed;
+  top: 5rem;
+  left: 5rem;
+  width: 25rem;
+  height: 13rem;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  z-index: 2; /* Adjusted z-index */
 }
 
 .popUpHeader {
-    display: flex;
-    justify-content:space-between;
-    background-color:#E2E1E1;
+  display: flex;
+  justify-content: space-between;
+  background-color: #e2e1e1;
 }
 
 h3 {
-    padding-left:1.5rem;
-    padding-right:6.5rem;
-    font-family: Arial;
-    font-size: 15px;
+  padding-left: 1.5rem;
+  padding-right: 6.5rem;
+  font-family: Arial;
+  font-size: 15px;
 }
 
 .closeBox {
-    cursor: pointer;
-    margin-top:0.75rem;
-    width:2rem;
-    height:2rem;
-    font-family: Arial;
-    font-size:16px;
+  cursor: pointer;
+  margin-top: 0.75rem;
+  width: 2rem;
+  height: 2rem;
+  font-family: Arial;
+  font-size: 16px;
 }
 
 .task_input {
-    margin-left:1.5rem;
-    padding:0.2rem;
-    border-radius: .25rem;
-    border:1px solid #ccc;
-    width:15rem;
+  margin-left: 1.5rem;
+  padding: 0.2rem;
+  border-radius: 0.25rem;
+  border: 1px solid #ccc;
+  width: 15rem;
 }
 
 .time_input {
-    padding-left:1.5rem;
-    display: flex;
-    justify-content:space-between;
-    padding-right:8rem;
+  padding-left: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  padding-right: 8rem;
 }
 
 .comboBox {
-    margin-left: 1.5rem;
-    border-radius: 0.4rem;
-    padding: 0.2rem;
-    width:10rem;
+  margin-left: 1.5rem;
+  border-radius: 0.4rem;
+  padding: 0.2rem;
+  width: 10rem;
 }
 
 .edit_input {
-    padding-left:1.5rem;
-    display: flex;
-    justify-content:space-between;
-    padding-right:2.8rem;
+  padding-left: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  padding-right: 2.8rem;
 }
 
 .time {
-    cursor: pointer;
-    border-radius: .5rem;
-    padding:0.25rem;
-    border:1px solid #ccc;
-    width:3.5rem;
-} 
+  cursor: pointer;
+  border-radius: 0.5rem;
+  padding: 0.25rem;
+  border: 1px solid #ccc;
+  width: 3.5rem;
+}
 
 /* Scrollbar Styles */
 .taskLog::-webkit-scrollbar {
-    width: 0;
-    background: transparent;
+  width: 0;
+  background: transparent;
 }
 
 .taskLog::-webkit-scrollbar-thumb {
-    background-color: #657786;
-    border-radius: 10px;
+  background-color: #657786;
+  border-radius: 10px;
 }
 
 .taskLog::-webkit-scrollbar-thumb:hover {
-    background-color: #546A7B;
+  background-color: #546a7b;
+}
+
+.taskTimerContainer {
+  background: #aab8c2;
+  height: 13rem;
+  margin: 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.taskTimerHeaders {
+  display: flex;
+  flex-direction: row;
+  color: white;
+  font-family: "Lato";
+  font-size: 1rem;
+  padding: 0.5rem;
+  border-bottom: 0.125rem solid black;
+}
+
+.taskTimerName {
+  display: flex;
+  justify-content: center;
+  width: 40%;
+}
+.taskTimerTime {
+  display: flex;
+  justify-content: center;
+  width: 30%;
+}
+
+.taskTimerPlay {
+  display: flex;
+  justify-content: center;
+  width: 15%;
+}
+
+.taskTimerEdit {
+  display: flex;
+  justify-content: center;
+  width: 15%;
+}
+.taskData {
+  display: flex;
+  flex-direction: row;
+  color: white;
+  font-size: 1rem;
+  padding: 0.25rem;
+  align-items: center;
+  border-bottom: 0.125rem solid black;
+}
+
+.taskName {
+  display: flex;
+  justify-content: center;
+  width: 40%;
+}
+
+.timer {
+  display: flex;
+  width: 30%;
+  justify-content: center;
+}
+
+.buttons {
+  display: flex;
+  width: 15%;
+  justify-content: center;
+  color: black;
+  background: transparent;
+}
+
+.addSite {
+  display: flex;
+  padding: 0.25rem;
+  background: #657786;
 }
