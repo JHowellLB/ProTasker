@@ -50,7 +50,6 @@
 
 .visualizeData {
   display: flex;
-  /* justify-content: center; */
 }
 
 .chartData {
@@ -81,16 +80,16 @@
   height: 12px;
 }
 
-::-webkit-scrollbar-track {
+.dataWrapper::-webkit-scrollbar-track {
   background: #f5f5f5;
   border-radius: 10px;
 }
 
-::-webkit-scrollbar-thumb {
+.dataWrapper::-webkit-scrollbar-thumb {
   border-radius: 10px;
   background: #aab8c2;
 }
 
-::-webkit-scrollbar-thumb:hover {
+.dataWrapper::-webkit-scrollbar-thumb:hover {
   background: #657786;
 }
