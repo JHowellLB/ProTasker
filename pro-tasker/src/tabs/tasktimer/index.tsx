@@ -10,14 +10,14 @@ import { timers } from "jquery"
 
 const TaskTimer = () => {
   const [addVisibility, setAddVisibility] = useState(false)
-  const [editVisibility, setEditVisibility] = useState(false)
+  const [editVisibility, setEditVisibility] = useState("")
   const [taskList, setTaskList] = useState([])
   const [editedHour, setEditedHour] = useState("")
   const [editedMinute, setEditedMinute] = useState("")
   const [addTaskName, setAddTaskName] = useState("")
 
-  const handleEdit = (edit) => {
-    setEditVisibility(!edit)
+  const handleEdit = (task) => {
+    setEditVisibility(task)
   }
 
   const handleEditTask = async (task) => {
@@ -190,19 +190,21 @@ const TaskTimer = () => {
               )}
               <div
                 onClick={() => {
-                  handleEdit(editVisibility)
+                  handleEdit(task)
                 }}
                 className="button">
                 <FaEdit size={28} />
               </div>
               <div>
-                {editVisibility ? (
-                  <div id="editPopup" className="popup">
+                {
+                  <div
+                    id="editPopup"
+                    className={editVisibility === task ? "popup" : "popupNone"}>
                     <div className="popUpHeader">
                       <h3 className="titleLabel">Edit Task</h3>
                       <div
                         className="closeBox"
-                        onClick={() => setEditVisibility(false)}>
+                        onClick={() => setEditVisibility("")}>
                         X
                       </div>
                     </div>
@@ -217,7 +219,7 @@ const TaskTimer = () => {
                           id="editHour"
                           className="time"
                           type="text"
-                          placeholder="Hours"
+                          placeholder={`${taskData.hours}`}
                           value={editedHour}
                           onChange={(e) =>
                             setEditedHour(e.target.value)
@@ -226,7 +228,7 @@ const TaskTimer = () => {
                           id="editMinute"
                           className="time"
                           type="text"
-                          placeholder="Minutes"
+                          placeholder={`${taskData.minutes}`}
                           value={editedMinute}
                           onChange={(e) =>
                             setEditedMinute(e.target.value)
@@ -244,9 +246,7 @@ const TaskTimer = () => {
                       </div>
                     </div>
                   </div>
-                ) : (
-                  <div></div>
-                )}
+                }
               </div>
             </div>
           ))}

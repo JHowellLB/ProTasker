@@ -239,6 +239,9 @@ h3 {
   background: #657786;
 }
 
+.popupNone {
+  display: none;
+}
 /* Scrollbar styles*/
 .taskTimerContainer::-webkit-scrollbar {
   display: none;
