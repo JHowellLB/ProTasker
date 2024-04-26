@@ -6,8 +6,6 @@ import { addTask, editTask, removeTask } from "../../api/taskDB"
 
 import "./task_styles.css"
 
-import { timers } from "jquery"
-
 const TaskTimer = () => {
   const [addVisibility, setAddVisibility] = useState(false)
   const [editVisibility, setEditVisibility] = useState("")
@@ -35,7 +33,7 @@ const TaskTimer = () => {
     await editTask(task, parseInt(editedHour), parseInt(editedMinute))
     setEditedHour("")
     setEditedMinute("")
-    setEditVisibility(!editedHour)
+    setEditVisibility("")
   }
 
   const handleAdd = (add) => {
