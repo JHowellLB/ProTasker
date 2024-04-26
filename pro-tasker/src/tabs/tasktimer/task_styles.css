@@ -89,7 +89,8 @@
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 0.5rem;
-  z-index: 2; /* Adjusted z-index */
+  z-index: 100; /* Adjusted z-index */
+  color: black;
 }
 
 .popUpHeader {
@@ -134,6 +135,7 @@ h3 {
   border-radius: 0.4rem;
   padding: 0.2rem;
   width: 10rem;
+  /* color: white; */
 }
 
 .edit_input {
@@ -151,36 +153,27 @@ h3 {
   width: 3.5rem;
 }
 
-/* Scrollbar Styles */
-.taskLog::-webkit-scrollbar {
-  width: 0;
-  background: transparent;
-}
-
-.taskLog::-webkit-scrollbar-thumb {
-  background-color: #657786;
-  border-radius: 10px;
-}
-
-.taskLog::-webkit-scrollbar-thumb:hover {
-  background-color: #546a7b;
-}
-
 .taskTimerContainer {
   background: #aab8c2;
   height: 13rem;
-  margin: 0.5rem;
-  border-radius: 0.25rem;
+  margin: 1rem;
+  border-radius: 0.5rem;
+  overflow-y: auto;
 }
 
 .taskTimerHeaders {
-  display: flex;
+  color: #fff;
+  background: #aab8c2;
+  border-bottom: 0.125rem solid #000;
+  border-radius: 0.5rem 0.5rem 0 0;
   flex-direction: row;
-  color: white;
-  font-family: "Lato";
+  width: 90.278%;
+  font-family: Lato;
   font-size: 1rem;
-  padding: 0.5rem;
-  border-bottom: 0.125rem solid black;
+  display: flex;
+  padding-block: 0.6375rem;
+  position: fixed;
+  padding-inline: 0.25rem;
 }
 
 .taskTimerName {
@@ -205,6 +198,10 @@ h3 {
   justify-content: center;
   width: 15%;
 }
+
+.taskDataContainer {
+  margin-top: 2.5rem;
+}
 .taskData {
   display: flex;
   flex-direction: row;
@@ -227,16 +224,22 @@ h3 {
   justify-content: center;
 }
 
-.buttons {
+.button {
   display: flex;
   width: 15%;
   justify-content: center;
   color: black;
   background: transparent;
+  align-items: center;
 }
 
 .addSite {
   display: flex;
   padding: 0.25rem;
   background: #657786;
+}
+
+/* Scrollbar styles*/
+.taskTimerContainer::-webkit-scrollbar {
+  display: none;
 }
