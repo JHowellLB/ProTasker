@@ -1,54 +1,48 @@
 import "./dailyweekly.css"
 
-import { useEffect, useState } from "react"
-
-import VisualizationChart from "./visualizationChart"
+import Chart from "chart.js/auto"
+import { useEffect, useRef, useState } from "react"
 
 const DailyWeeklyVisualization = () => {
   const [btn, setBtn] = useState("daily")
 
-  const [dailyWebsites, setDailyWebsites] = useState([]) // address 125: [{chrome:0}]
-  const [weeklyWebsites, setWeeklyWebsites] = useState({})
+  const [chartBtn, setChartBtn] = useState("pie")
+
+  const [dailyWebsites, setDailyWebsites] = useState({}).sort()
+  const [weeklyWebsites, setWeeklyWebsites] = useState({}).sort()
   const day = new Date().getDay().toString()
 
   const handleButtonClick = (btn: string) => {
     setBtn(btn)
   }
+  const handleChartButtonClick = (btn: string) => {
+    setChartBtn(btn)
+  }
   const parseWebsitesDaily = async () => {
-    let newDailyWebsites = [...dailyWebsites]
+    let newDailyWebsites = { ...dailyWebsites }
     const dailyWebsitesPromise = await chrome.storage.local.get(day)
     const dailyWebsitesStringify = JSON.stringify(dailyWebsitesPromise[day])
     const dailyWebsitesParse = JSON.parse(dailyWebsitesStringify)
     for (const [key, value] of Object.entries(dailyWebsitesParse)) {
-      const exists = newDailyWebsites.some((site) => site.key === key)
-      if (!exists) {
-        newDailyWebsites.push({ key, value })
+      if (!newDailyWebsites[key]) {
+        newDailyWebsites[key] = value
       }
     }
     setDailyWebsites(newDailyWebsites)
   }
 
   const parseWebsitesWeekly = async () => {
-    // Create a copy of the current state
     let newWeeklyWebsites = { ...weeklyWebsites }
-
-    // Loop through each day
     for (let i = 0; i <= parseInt(day); i++) {
-      // Retrieve websites data for the current day from storage
       const weeklyWebsitesPromise = await chrome.storage.local.get(i.toString())
       const weeklyWebsitesStringify = JSON.stringify(
         weeklyWebsitesPromise[i.toString()]
       )
       const dailyWebsitesParse = JSON.parse(weeklyWebsitesStringify)
-
-      // Loop through the websites data for the current day
       for (const [key, value] of Object.entries(dailyWebsitesParse)) {
-        // Check if the key already exists in the state
         if (newWeeklyWebsites.hasOwnProperty(key)) {
-          // If the key exists, update its value by adding the new value
           newWeeklyWebsites[key] += value
         } else {
-          // If the key does not exist, add it to the state with the new value
           newWeeklyWebsites[key] = value
         }
       }
@@ -63,6 +57,220 @@ const DailyWeeklyVisualization = () => {
   useEffect(() => {
     parseWebsitesWeekly()
   }, [])
+  useEffect(() => {
+    if (btn === "daily") {
+      parseWebsitesDaily()
+    }
+  }, [btn])
+  useEffect(() => {
+    parseWebsitesWeekly()
+  }, [])
+  const getFaviconUrl = (domain) =>
+    `https://www.google.com/s2/favicons?domain=${domain}`
+
+  const data = [
+    { label: "Label 1", value: 10 },
+    { label: "Label 2", value: 20 }
+    // Add more data objects as needed
+  ]
+
+  const DailyRingGraph = ({ dailyWebsites }) => {
+    const chartRef = useRef(null)
+    const top5Entries = Object.entries(dailyWebsites)
+      .sort((a, b) => b[1] - a[1]) // Sort entries by value in descending order
+      .slice(0, 5) // Take the first 5 entries
+    useEffect(() => {
+      if (chartRef && chartRef.current) {
+        const ctx = chartRef.current.getContext("2d")
+        new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: top5Entries.map((item) => item[0]),
+            datasets: [
+              {
+                label: "seconds",
+                data: top5Entries.map((item) => item[1]),
+                backgroundColor: [
+                  "rgba(255, 99, 132, 0.8)",
+                  "rgba(54, 162, 235, 0.8)",
+                  "rgba(255, 206, 86, 0.8)",
+                  "rgba(75, 192, 192, 0.8)",
+                  "rgba(153, 102, 255, 0.8)"
+                  // "rgba(255, 159, 64, 0.8)",
+                  // "rgba(255, 99, 132, 0.8)",
+                  // "rgba(54, 162, 235, 0.8)",
+                  // "rgba(255, 206, 86, 0.8)",
+                  // "rgba(75, 192, 192, 0.8)"
+                ],
+                borderWidth: 1
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                display: false
+              }
+            }
+          }
+        })
+      }
+    }, [dailyWebsites])
+
+    return <canvas ref={chartRef} />
+  }
+
+  const WeeklyRingGraph = ({ weeklyWebsites }) => {
+    const chartRef = useRef(null)
+    const top5Entries = Object.entries(weeklyWebsites)
+      .sort((a, b) => b[1] - a[1]) // Sort entries by value in descending order
+      .slice(0, 5) // Take the first 5 entries
+    useEffect(() => {
+      if (chartRef && chartRef.current) {
+        const ctx = chartRef.current.getContext("2d")
+
+        new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: top5Entries.map((item) => item[0]),
+            datasets: [
+              {
+                label: "seconds",
+                data: top5Entries.map((item) => item[1]),
+                backgroundColor: [
+                  "rgba(255, 99, 132, 0.8)",
+                  "rgba(54, 162, 235, 0.8)",
+                  "rgba(255, 206, 86, 0.8)",
+                  "rgba(75, 192, 192, 0.8)",
+                  "rgba(153, 102, 255, 0.8)"
+                  // "rgba(255, 159, 64, 0.8)",
+                  // "rgba(255, 99, 132, 0.8)",
+                  // "rgba(54, 162, 235, 0.8)",
+                  // "rgba(255, 206, 86, 0.8)",
+                  // "rgba(75, 192, 192, 0.8)"
+                ],
+                borderWidth: 1
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                display: false
+              }
+            }
+          }
+        })
+      }
+    }, [weeklyWebsites])
+
+    return <canvas ref={chartRef} />
+  }
+
+  const WeeklyBarGraph = ({ weeklyWebsites }) => {
+    const chartRef = useRef(null)
+    const top5Entries = Object.entries(weeklyWebsites)
+      .sort((a, b) => b[1] - a[1]) // Sort entries by value in descending order
+      .slice(0, 5) // Take the first 5 entries
+    useEffect(() => {
+      if (chartRef && chartRef.current) {
+        const ctx = chartRef.current.getContext("2d")
+        new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: top5Entries.map((item) => item[0]),
+            datasets: [
+              {
+                label: "Website Visits",
+                data: top5Entries.map((item) => item[1]),
+                backgroundColor: [
+                  "rgba(255, 99, 132, 0.6)",
+                  "rgba(54, 162, 235, 0.6)",
+                  "rgba(255, 206, 86, 0.6)",
+                  "rgba(75, 192, 192, 0.6)",
+                  "rgba(153, 102, 255, 0.6)"
+                ],
+                borderWidth: 1
+              }
+            ]
+          },
+          options: {
+            indexAxis: "x", // Set the index axis to 'x' for vertical bars
+            responsive: true,
+            plugins: {
+              legend: {
+                display: false
+              }
+            },
+            scales: {
+              x: {
+                display: false // Hide x-axis labels
+              },
+              y: {
+                display: true // Display y-axis labels (optional)
+              }
+            }
+          }
+        })
+      }
+    }, [dailyWebsites])
+
+    return <canvas ref={chartRef} />
+  }
+  const DailyBarGraph = ({ dailyWebsites }) => {
+    const chartRef = useRef(null)
+    const top5Entries = Object.entries(dailyWebsites)
+      .sort((a, b) => b[1] - a[1]) // Sort entries by value in descending order
+      .slice(0, 5) // Take the first 5 entries
+
+    useEffect(() => {
+      if (chartRef && chartRef.current) {
+        const ctx = chartRef.current.getContext("2d")
+        new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: top5Entries.map((item) => item[0]),
+            datasets: [
+              {
+                label: "seconds",
+                data: top5Entries.map((item) => item[1]),
+                backgroundColor: [
+                  "rgba(255, 99, 132, 0.6)",
+                  "rgba(54, 162, 235, 0.6)",
+                  "rgba(255, 206, 86, 0.6)",
+                  "rgba(75, 192, 192, 0.6)",
+                  "rgba(153, 102, 255, 0.6)"
+                ],
+                borderWidth: 1
+              }
+            ]
+          },
+          options: {
+            indexAxis: "x", // Set the index axis to 'x' for vertical bars
+            responsive: true,
+            plugins: {
+              legend: {
+                display: false
+              }
+            },
+            scales: {
+              x: {
+                display: false // Hide x-axis labels
+              },
+              y: {
+                display: true // Display y-axis labels (optional)
+              }
+            }
+          }
+        })
+      }
+    }, [dailyWebsites])
+
+    return <canvas ref={chartRef} />
+  }
+
   return (
     <div>
       <section className="dailyWeeklyWrapper">
@@ -85,21 +293,67 @@ const DailyWeeklyVisualization = () => {
       </section>
       <div className="visualizeData">
         <div className="chartData">
-          Chart Goes Here
-          <VisualizationChart />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+              height: "75%",
+              marginTop: "0.25rem"
+            }}>
+            {btn === "daily" ? (
+              chartBtn === "pie" ? (
+                <DailyRingGraph dailyWebsites={dailyWebsites} />
+              ) : (
+                <DailyBarGraph dailyWebsites={dailyWebsites} />
+              )
+            ) : chartBtn === "pie" ? (
+              <WeeklyRingGraph weeklyWebsites={weeklyWebsites} />
+            ) : (
+              <WeeklyBarGraph weeklyWebsites={weeklyWebsites} />
+            )}
+          </div>
+          <section className="dailyWeeklyWrapper">
+            <div className="dailyWeekly">
+              <div
+                onClick={() => handleChartButtonClick("pie")}
+                className={
+                  chartBtn === "pie" ? "dailyweeklyBtnActive" : "dailyweeklyBtn"
+                }>
+                Pie Chart
+              </div>
+              <div
+                onClick={() => handleChartButtonClick("bar")}
+                className={
+                  chartBtn === "bar" ? "dailyweeklyBtnActive" : "dailyweeklyBtn"
+                }>
+                Bar Chart
+              </div>
+            </div>
+          </section>
         </div>
         <div className="visualizeWebsiteData">
           {btn === "daily" ? (
             <div className="dataWrapper">
-              {dailyWebsites
-                .sort((a, b) => b.value - a.value) // Sort the array in descending order based on value
-                .map((site, index) => (
+              {Object.entries(dailyWebsites)
+                .sort(([, valueA], [, valueB]) => valueB - valueA)
+                .map(([key, value], index) => (
                   <div key={index} className="websiteData">
-                    {site.key}
+                    <div className="websiteIcons">
+                      <img
+                        src={getFaviconUrl(key)}
+                        alt={`${key} favicon`}
+                        className="icons"
+                      />
+                      {key}
+                    </div>
                     <div>
-                      {`${Math.floor(site.value / 3600)}`.padStart(2, "0")}h{" "}
-                      {`${Math.floor(site.value / 60) % 60}`.padStart(2, "0")}m{" "}
-                      {`${site.value % 60}`.padStart(2, "0")}s
+                      <div>
+                        {`${Math.floor(value / 3600)}`.padStart(2, "0")}h{" "}
+                        {`${Math.floor(value / 60) % 60}`.padStart(2, "0")}m{" "}
+                        {`${value % 60}`.padStart(2, "0")}s
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -107,10 +361,17 @@ const DailyWeeklyVisualization = () => {
           ) : (
             <div className="dataWrapper">
               {Object.entries(weeklyWebsites)
-                .sort(([, valueA], [, valueB]) => valueB - valueA) // Sort the entries in descending order based on value
+                .sort(([, valueA], [, valueB]) => valueB - valueA)
                 .map(([key, value], index) => (
                   <div key={index} className="websiteData">
-                    {key}
+                    <div className="websiteIcons">
+                      <img
+                        src={getFaviconUrl(key)}
+                        alt={`${key} favicon`}
+                        className="icons"
+                      />
+                      {key}
+                    </div>
                     <div>
                       <div>
                         {`${Math.floor(value / 3600)}`.padStart(2, "0")}h{" "}
