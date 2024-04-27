@@ -8,6 +8,7 @@ var day = new Date().getDay().toString()
 var activeTabId = null
 const hour = new Date().getHours()
 const min = new Date().getMinutes()
+//chrome.idle.setDetectionInterval(120) // Not sure what time to set it at. Default is 60s.
 chrome.alarms.create("taskTimer", {
   periodInMinutes: 1 / 60
 })
@@ -111,6 +112,21 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   if (tabId === activeTabId && changeInfo.status === "complete") {
     // Check if the updated tab is the active tab
     handleTab(tab)
+  }
+})
+
+// Handle idle detection
+// If a user is idle for 60s or the screen locks, time tracking stops.
+chrome.idle.onStateChanged.addListener(function (newState) {
+  if (newState != "active") {
+    domain = "inactive"
+  }
+  else {
+    // Query options ensure that only one tab can be returned, since query function returns an array value.
+    let queryOptions = { active: true, lastFocusedWindow: true }
+    chrome.tabs.query(queryOptions, function ([tab]) {
+      handleTab(tab)
+    })
   }
 })
 
