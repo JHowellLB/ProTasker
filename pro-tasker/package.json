@@ -38,7 +38,8 @@
       "tabs",
       "storage",
       "alarms",
-      "notifications"
+      "notifications",
+      "idle"
     ],
     "background": {
       "service_worker": "background"
