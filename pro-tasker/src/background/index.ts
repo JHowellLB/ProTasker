@@ -74,28 +74,37 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 // Function to handle URL extraction and storage
 function handleTab(tab) {
   if (tab && tab.url) {
-    var tabUrl
-    try {
-      tabUrl = new URL(tab.url).hostname
-    } catch (error) {
-      // Handle invalid URLs or URLs not fully loaded
-      tabUrl = "invalid"
-    }
-    if (tabUrl !== "invalid") {
-      domain = tabUrl
-      if (domain.includes(".")) {
-        day = new Date().getDay().toString()
-        chrome.storage.local.get(day, (result) => {
-          if (typeof result[day] === "undefined") {
-            chrome.storage.local.set({ [day]: { [domain]: 0 } })
-          } else if (typeof result[day][domain] === "undefined") {
-            chrome.storage.local.set({ [day]: { ...result[day], [domain]: 0 } })
-          }
-        })
-      } else {
-        domain = "inactive"
+      var tabUrl;
+      try {
+          tabUrl = new URL(tab.url).hostname;
+      } catch (error) {
+          // Handle invalid URLs or URLs not fully loaded
+          tabUrl = "invalid";
       }
-    }
+      if (tabUrl !== "invalid") {
+          domain = tabUrl;
+          chrome.storage.local.get(null, function(data) {
+            const blockedWebsites: string[] = Object.keys(data).filter(key => key.startsWith("blocked-")).map(key => key.replace("blocked-", ""));
+            if (blockedWebsites.includes(domain)) {
+              console.log("This website is blocked:", domain)
+              const blockedHTML: string = chrome.runtime.getURL("src/tabs/sitelimit/redirectwebsite/blocked_website.html")
+              console.log(blockedHTML)
+              chrome.tabs.update(tab.id, { url: "../tabs/sitelimit/redirectwebsite/blocked_website.html" });
+            }
+          })
+          if (domain.includes(".")) {
+              day = new Date().getDay().toString();
+              chrome.storage.local.get(day, (result) => {
+                  if (typeof result[day] === "undefined") {
+                      chrome.storage.local.set({ [day]: { [domain]: 0 } });
+                  } else if (typeof result[day][domain] === "undefined") {
+                      chrome.storage.local.set({ [day]: { ...result[day], [domain]: 0 } });
+                  }
+              });
+          } else {
+              domain = "inactive";
+          }
+      }
   }
 }
 
