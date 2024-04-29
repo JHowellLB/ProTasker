@@ -71,6 +71,9 @@ const TaskTimer = () => {
     setEditedMinute("")
     setAddVisibility(!addVisibility)
   }
+  const DTask = async (task) => {
+    await removeTask(task)
+  }
 
   const parseTaskList = async () => {
     const newTaskList = [...taskList]
@@ -240,7 +243,7 @@ const TaskTimer = () => {
                           className="time"
                           type="submit"
                           value="Delete"
-                          onClick={() => removeTask(task)}></input>
+                          onClick={() => DTask(task)}></input>
                       </div>
                     </div>
                   </div>
