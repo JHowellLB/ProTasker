@@ -111,14 +111,8 @@ function handleTab(tab: chrome.tabs.Tab) {
 // Function to handle window focus change
 function handleWindowFocusChange(windowId: number) {
   if (windowId === chrome.windows.WINDOW_ID_NONE) {
-      // Window is not focused
-      console.log("Window is not focused");
-      // Perform actions when the window is not focused
       domain = "inactive"
   } else {
-      // Window is focused
-      console.log("Window is focused");
-      // Perform actions when the window is focused
       let queryOptions = { active: true, lastFocusedWindow: true }
           chrome.tabs.query(queryOptions, ([tab]) => {
             handleTab(tab)
@@ -144,33 +138,24 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 
 // Handle idle detection
 // If a user is idle for 60s or the screen locks, time tracking stops.
-// Three possible 
-// Add a check to see if audio is playing
+// Three possible states: locked, idle, active.
+// Need to add a check to see if audio is playing, can query for tabs that are playing audio?
 chrome.idle.onStateChanged.addListener((newState) => {
   if (newState === "locked") {
-    console.log(newState)
     domain = "inactive"
   }
   else if (newState === "idle") {
-    console.log(newState)
     domain = "inactive"
   }
   else {
-    console.log(newState)
-    // Query options ensure that only one tab can be returned, since query function returns an array value.
     chrome.windows.getLastFocused(null, window => {
       if (window && window.focused) {
-          // Window is focused
-          console.log("Window is focused and user is active");
-          // Perform actions when the window is focused initially
           let queryOptions = { active: true, lastFocusedWindow: true }
           chrome.tabs.query(queryOptions, ([tab]) => {
             handleTab(tab)
           })
       } else {
           // Window is not focused
-          console.log("Window is not focused but user is active");
-          // Perform actions when the window is not focused initially
           domain = "inactive"
       }
   });  
@@ -182,7 +167,6 @@ chrome.windows.onFocusChanged.addListener(handleWindowFocusChange)
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name === "mostUsedTimer") {
-    console.log(domain)
     if (domain != "inactive") {
       chrome.storage.local.get(day, (result) => {
         const currentTime = result[day][domain]
