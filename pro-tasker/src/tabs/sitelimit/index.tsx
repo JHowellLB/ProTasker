@@ -129,10 +129,6 @@ useEffect(() => {
 }, []);
 
 
-  // Rest of your component code...
-  // Render website data in your log body
-
-
   return (
     <section>
 	    <div className="addSite" onClick={addSiteClick}>
