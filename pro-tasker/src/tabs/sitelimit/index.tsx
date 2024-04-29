@@ -99,6 +99,7 @@ const SiteLimit = () => {
 
   const DTask = async (task) => {
     await removeBlocked(task)
+    setEditVisibility(false)
   }
 
   const handleEditSite = async () => {
