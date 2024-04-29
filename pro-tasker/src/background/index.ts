@@ -72,7 +72,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 })
 
 // Function to handle URL extraction and storage
-function handleTab(tab) {
+function handleTab(tab: chrome.tabs.Tab) {
   if (tab && tab.url) {
       var tabUrl;
       try {
@@ -108,10 +108,28 @@ function handleTab(tab) {
   }
 }
 
+// Function to handle window focus change
+function handleWindowFocusChange(windowId: number) {
+  if (windowId === chrome.windows.WINDOW_ID_NONE) {
+      // Window is not focused
+      console.log("Window is not focused");
+      // Perform actions when the window is not focused
+      domain = "inactive"
+  } else {
+      // Window is focused
+      console.log("Window is focused");
+      // Perform actions when the window is focused
+      let queryOptions = { active: true, lastFocusedWindow: true }
+          chrome.tabs.query(queryOptions, ([tab]) => {
+            handleTab(tab)
+          })
+  }
+}
+
 // Handle tab activation
 chrome.tabs.onActivated.addListener(function (activeInfo) {
   activeTabId = activeInfo.tabId // Update active tab ID
-  chrome.tabs.get(activeTabId, function (tab) {
+  chrome.tabs.get(activeTabId, (tab) => {
     handleTab(tab)
   })
 })
@@ -126,21 +144,45 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 
 // Handle idle detection
 // If a user is idle for 60s or the screen locks, time tracking stops.
-chrome.idle.onStateChanged.addListener(function (newState) {
-  if (newState != "active") {
+// Three possible 
+// Add a check to see if audio is playing
+chrome.idle.onStateChanged.addListener((newState) => {
+  if (newState === "locked") {
+    console.log(newState)
+    domain = "inactive"
+  }
+  else if (newState === "idle") {
+    console.log(newState)
     domain = "inactive"
   }
   else {
+    console.log(newState)
     // Query options ensure that only one tab can be returned, since query function returns an array value.
-    let queryOptions = { active: true, lastFocusedWindow: true }
-    chrome.tabs.query(queryOptions, function ([tab]) {
-      handleTab(tab)
-    })
+    chrome.windows.getLastFocused(null, window => {
+      if (window && window.focused) {
+          // Window is focused
+          console.log("Window is focused and user is active");
+          // Perform actions when the window is focused initially
+          let queryOptions = { active: true, lastFocusedWindow: true }
+          chrome.tabs.query(queryOptions, ([tab]) => {
+            handleTab(tab)
+          })
+      } else {
+          // Window is not focused
+          console.log("Window is not focused but user is active");
+          // Perform actions when the window is not focused initially
+          domain = "inactive"
+      }
+  });  
   }
 })
 
+// Handle window focus change
+chrome.windows.onFocusChanged.addListener(handleWindowFocusChange)
+
 chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name === "mostUsedTimer") {
+    console.log(domain)
     if (domain != "inactive") {
       chrome.storage.local.get(day, (result) => {
         const currentTime = result[day][domain]
@@ -152,7 +194,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     // clear local storage at the start of the week (sunday)
     // idk if this works
     if (hour == 0 && min == 0 && day == "0") {
-      for (let i = 0; i <= 7; i++) {
+      for (let i = 0; i <= 6; i++) {
         if (
           Object.keys(await chrome.storage.local.get([i.toString()])).length > 0
         ) {
@@ -163,7 +205,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     if (hour == 0 && min == 1 && day == "0") {
       // Initialize data for numbers 1-7 in Chrome's local storage
       const newData = {}
-      for (let i = 0; i <= parseInt(day); i++) {
+      for (let i = 0; i <= 6; i++) {
         newData[i.toString()] = {}
       }
       chrome.storage.local.set(newData, function () {
