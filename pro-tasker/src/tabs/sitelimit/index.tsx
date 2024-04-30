@@ -46,8 +46,10 @@ const SiteLimit = () => {
   }
 
   async function addWebsite() {
+    let url = new URL(addSiteName);
+    let hostname = url.hostname;
     await addBlocked(
-      addSiteName,
+      hostname,
       parseInt(timerHour),
       parseInt(timerMinute),
       schedules
@@ -125,7 +127,9 @@ const SiteLimit = () => {
       for (const site in retrieveData) {
         if (site.startsWith("blocked-")) {
           const siteName = site.substring(8)
+          console.log("This is site: ", siteName)
           newSiteList[siteName] = retrieveData[site]
+          console.log(siteName);
         }
       }
 
