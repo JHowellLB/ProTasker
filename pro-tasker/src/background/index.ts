@@ -89,7 +89,7 @@ function handleTab(tab) {
               console.log("This website is blocked:", domain)
               const blockedHTML: string = chrome.runtime.getURL("src/tabs/sitelimit/redirectwebsite/blocked_website.html")
               console.log(blockedHTML)
-              chrome.tabs.update(tab.id, { url: "../tabs/sitelimit/redirectwebsite/blocked_website.html" });
+              chrome.tabs.update(tab.id, { url: blockedHTML });
             }
           })
           if (domain.includes(".")) {
