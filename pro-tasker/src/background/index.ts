@@ -130,7 +130,7 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 
 // Handle tab updates
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-  if (tabId === activeTabId && changeInfo.status === "complete") {
+  if (tabId === activeTabId) {
     // Check if the updated tab is the active tab
     handleTab(tab)
   }
