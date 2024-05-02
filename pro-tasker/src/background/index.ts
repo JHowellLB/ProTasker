@@ -137,26 +137,39 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 })
 
 // Handle idle detection
-// If a user is idle for 60s or the screen locks, time tracking stops.
 // Three possible states: locked, idle, active.
-// Need to add a check to see if audio is playing, can query for tabs that are playing audio?
+// If the screen locks, time tracking stops.
+// If state is idle, checks if audio is playing before time tracking stops.
 chrome.idle.onStateChanged.addListener((newState) => {
   if (newState === "locked") {
     domain = "inactive"
   }
   else if (newState === "idle") {
     domain = "inactive"
+    let queryOptions = { active: true, lastFocusedWindow: true, audible: true }
+          chrome.tabs.query(queryOptions, ([tab]) => {
+            console.log(newState)
+            console.log(tab)
+            console.log(typeof tab)
+            if(typeof tab === "undefined"){
+              domain = "inactive"
+            }
+            else {
+              handleTab(tab)
+            }
+          })
   }
   else {
     chrome.windows.getLastFocused(null, window => {
       if (window && window.focused) {
-          let queryOptions = { active: true, lastFocusedWindow: true }
-          chrome.tabs.query(queryOptions, ([tab]) => {
-            handleTab(tab)
-          })
-      } else {
-          // Window is not focused
-          domain = "inactive"
+        let queryOptions = { active: true, lastFocusedWindow: true }
+        chrome.tabs.query(queryOptions, ([tab]) => {
+          handleTab(tab)
+        })
+      } 
+      else {
+        // Window is not focused
+        domain = "inactive"
       }
   });  
   }
@@ -167,6 +180,7 @@ chrome.windows.onFocusChanged.addListener(handleWindowFocusChange)
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name === "mostUsedTimer") {
+    console.log(domain)
     if (domain != "inactive") {
       chrome.storage.local.get(day, (result) => {
         const currentTime = result[day][domain]
