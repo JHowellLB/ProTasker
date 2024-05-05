@@ -9,6 +9,7 @@ interface Duration {
 export interface Schedule {
   day: string // Maybe use an enum for days
   startTime: string
+  activated: boolean
 }
 
 // chrome.storage.local.get() must be wrapped in a promise to allow await.
@@ -36,7 +37,8 @@ export async function addBlocked(
   blockedSite: string,
   blockedHours: number,
   blockedMinutes: number,
-  schedules: Schedule[]
+  schedules: Schedule[],
+  activated: boolean = false
 ) {
   // Concatenate 'blocked-' to uniquely identify task keys.
   const blockedKey = "blocked-" + blockedSite.toLowerCase()
@@ -54,7 +56,7 @@ export async function addBlocked(
   // If the result's type is undefined, the key is not in use. Therefore, set the value.
   // Otherwise, do not set the value.
   if (typeof result === "undefined") {
-    chrome.storage.local.set({ [blockedKey]: blockedDuration }, () => {
+    chrome.storage.local.set({ [blockedKey]: blockedDuration, activated }, () => {
       if (chrome.runtime.lastError) {
         console.error("Error adding blocked site:", chrome.runtime.lastError)
       } else {
@@ -72,7 +74,8 @@ export async function editBlocked(
   blockedSite: string,
   blockedHours: number,
   blockedMinutes: number,
-  schedules: Schedule[]
+  schedules: Schedule[],
+  activated: boolean
 ) {
   // Concatenate 'blocked-' to uniquely identify task keys.
   const blockedKey = "blocked-" + blockedSite.toLowerCase()
@@ -90,7 +93,7 @@ export async function editBlocked(
   // If the result's type is not undefined, the key is in use. Therefore, set the value as the new edit value.
   // Otherwise, the key is not in use. do not set the value. Log the error
   if (typeof result != "undefined") {
-    chrome.storage.local.set({ [blockedKey]: blockedDuration }, () => {
+    chrome.storage.local.set({ [blockedKey]: blockedDuration, activated }, () => {
       if (chrome.runtime.lastError) {
         console.error("Error editing blocked site:", chrome.runtime.lastError)
       } else {
@@ -138,3 +141,23 @@ export async function retrieveBlocked(blocked = null) {
     })
   })
 }
+
+// Function to retrieve blocked website data based on key
+export async function getBlockedData(site: string) {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(`blocked-${site}`, (data) => {
+      resolve(data[`blocked-${site}`]);
+    });
+  });
+}
+
+export async function getActivationState(site: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(`blocked-${site}`, (data) => {
+      const blockedData = data[`blocked-${site}`];
+      // If blockedData exists and has the activated field, resolve with its value, otherwise resolve with false
+      resolve(blockedData ? !!blockedData.activated : false);
+    });
+  });
+}
+

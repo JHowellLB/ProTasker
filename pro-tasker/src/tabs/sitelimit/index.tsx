@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react"
 import {
   addBlocked,
   editBlocked,
+  getActivationState,
+  getBlockedData,
   removeBlocked,
   retrieveBlocked
 } from "../../api/blockedDB"
@@ -29,6 +31,8 @@ const SiteLimit = () => {
   const [addSiteName, setAddSiteName] = useState("")
   const [siteList, setWebsiteList] = useState({})
   const [selectedSite, setSelectedSite] = useState("")
+  const [activationState, setActivationState] = useState("")
+  const [color, setColor] = useState("")
 
   const handleClick = () => {
     setShowInputs(!showInputs)
@@ -52,39 +56,17 @@ const SiteLimit = () => {
       hostname,
       parseInt(timerHour),
       parseInt(timerMinute),
-      schedules
+      schedules,
+      false
     )
     setTimerHour("")
     setTimerMinute("")
     setAddVisibility(false)
-  }
+    setColor("green")
+    setActivationState("Activate")
+    await chrome.storage.local.set({ [`activationState-${site}`]: 'Activate' });
+    await chrome.storage.local.set({ [`color-${site}`]: 'green' });
 
-  // This function is called when the user decides they want to save the
-  // combination of inputs they have put.
-  function handleSave() {
-    const id = new Date().getTime()
-    const timer = `${timerHour}:${timerMinute}`
-    if (editingIndex !== null) {
-      // Update the item at editingIndex
-      setWebsites(
-        websites.map((website, index) =>
-          index === editingIndex
-            ? { ...website, url: site, timer, schedules }
-            : website
-        )
-      )
-      setEditingIndex(null) // Reset editingIndex
-    } else {
-      // Add a new item
-      setWebsites([...websites, { id, url: site, timer, schedules }])
-    }
-
-    setSite("")
-    setTimerHour("")
-    setTimerMinute("")
-    setSchedules([])
-    setAddVisibility(false)
-    addWebsite()
   }
 
   const addSiteClick = () => {
@@ -97,20 +79,75 @@ const SiteLimit = () => {
     setSchedules([])
     setAddVisibility(true)
     setShowInputs(false)
+    setColor("green")
+    setActivationState("Activate")
   }
+
+  const handleActivate = async (site: string) => {
+    // Retrieve the current blocked website data
+    const blockedData = await getBlockedData(site);
+    
+    const websiteUpdated = typeof blockedData === 'object' ? blockedData : {};
+
+    // If the website is blocked, update the activated field to true
+    if (blockedData) {
+      const currentState = await getActivationState(site);
+      const newActivationState = !currentState;
+      if (currentState == false) {
+        await chrome.storage.local.set({ [`blocked-${site}`]: { ...websiteUpdated, activated: true } });
+        setColor("red");
+        setActivationState("Activated");
+      } else {
+        await chrome.storage.local.set({ [`blocked-${site}`]: { ...websiteUpdated, activated: false } });
+        setColor("green");
+        setActivationState("Activate");
+      }
+      await chrome.storage.local.set({ [`activationState-${site}`]: newActivationState });
+      await chrome.storage.local.set({ [`color-${site}`]: newActivationState ? 'red' : 'green' });
+      console.log(`Website ${site} is activated.`);
+    } else {
+      console.error(`Cannot find blocked data for website ${site}.`);
+    }
+  }
+
+  // Function to update the button activation state when the extension loads
+const updateButtonActivationState = async (site: string) => {
+  try {
+    // Retrieve the activation state from Chrome's storage
+    const activated = await getActivationState(site);
+
+    // Update the button style and text
+    const button = document.getElementById(`activateButton-${site}`);
+
+  } catch (error) {
+    console.error(`Error updating activation state for website ${site}:`, error);
+  }
+}
+
+// Call the function to update the button activation state for each website when the extension loads
+websites.forEach((website) => {
+  updateButtonActivationState(website.url);
+});
+
 
   const DTask = async (task) => {
     await removeBlocked(task)
     setEditVisibility(false)
   }
 
-  const handleEditSite = async () => {
+  const handleEdit = (site) => {
+    setEditingIndex(site)
+    setEditVisibility(site)
+  }
+
+  const handleEditSite = async (site) => {
     // Call editBlocked function with the edited values and the selected site
     await editBlocked(
-      selectedSite,
+      site,
       parseInt(timerHour),
       parseInt(timerMinute),
-      schedules
+      schedules,
+      false
     )
 
     // Reset input fields and close the edit popup window
@@ -118,6 +155,7 @@ const SiteLimit = () => {
     setTimerMinute("")
     setEditVisibility(false)
   }
+
 
   const parseWebsiteList = async () => {
     try {
@@ -144,6 +182,24 @@ const SiteLimit = () => {
 
     const loadWebsitesInterval = setInterval(parseWebsiteList, 1000)
 
+    const fetchActivationStateAndUpdateState = async (site) => {
+      try {
+        const activated = await getActivationState(site);
+        const activationStateFromStorage = await chrome.storage.local.get(`activationState-${site}`);
+        const colorFromStorage = await chrome.storage.local.get(`color-${site}`);
+        setActivationState(activationStateFromStorage[0] ? 'Activated' : 'Activate');
+        setColor(colorFromStorage[0]);
+      } catch (error) {
+        console.error(`Error fetching activation state for website ${site}:`, error);
+      }
+    };
+
+
+    websites.forEach((website) => {
+      fetchActivationStateAndUpdateState(website.url);
+    });
+
+
     return () => {
       clearInterval(loadWebsitesInterval)
     }
@@ -168,8 +224,8 @@ const SiteLimit = () => {
               <div className="timerText">
                 {siteList[site].hours} : {siteList[site].minutes}
               </div>
-              <button className="activateButton" onClick={handleSave}>
-                Activate
+              <button id={`activateButton-${site}`} className="activateButton" onClick={() => {handleActivate(site)}} style={{backgroundColor: color}}>
+                {activationState}
               </button>
               <div className="scheduleText">
                 {siteList[site].schedules.length > 0 ? (
@@ -189,11 +245,11 @@ const SiteLimit = () => {
               <button
                 className="editButton"
                 onClick={() => {
-                  setEditVisibility(true), setEditingIndex(index)
+                  setEditVisibility(true), handleEdit(site)
                 }}>
                 E
               </button>
-              {editVisibility && (
+              {editVisibility && editingIndex === site &&(
                 <div id="sitePopup" className="sitePopup">
                   <div className="sitePopupHeader">
                     <h3 className="titleLabel">Edit Website</h3>
@@ -204,7 +260,7 @@ const SiteLimit = () => {
                     </div>
                   </div>
                   <div>
-                    <h3>Website URL:{}</h3>
+                    <h3>Website URL:{site}</h3>
                     {/* <select
                       className="comboBox"
                       value={selectedSite}
@@ -223,19 +279,19 @@ const SiteLimit = () => {
                         type="text"
                         value={timerHour}
                         onChange={(e) => setTimerHour(e.target.value)}
-                        placeholder={"${siteData.hours}"}></input>
+                        placeholder={`${siteList[site].hours}`}></input>
                       <input
                         id="minute"
                         className="time"
                         type="text"
                         value={timerMinute}
                         onChange={(e) => setTimerMinute(e.target.value)}
-                        placeholder={"${siteData.minutes}"}></input>
+                        placeholder={`${siteList[site].minutes}`}></input>
                       <input
                         className="time"
                         type="submit"
                         value="Save"
-                        onClick={handleEditSite}></input>
+                        onClick={() => handleEditSite(site)}></input>
                       <input
                         className="time"
                         type="submit"
