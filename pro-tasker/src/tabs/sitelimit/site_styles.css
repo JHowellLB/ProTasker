@@ -265,6 +265,10 @@ h3 {
   margin-right: 70px;
 }
 
+.activated {
+  color: white;
+}
+
 .editButton {
   width: 20px;
   height: 20px;
