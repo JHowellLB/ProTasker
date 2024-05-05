@@ -41,51 +41,26 @@ chrome.runtime.onInstalled.addListener(async function (details) {
 })
 
 // Every startup, check for and clear old website time tracking data
+// Latest date is was cleared is stored in storage as cleared : dateString
 chrome.runtime.onStartup.addListener(() => {
-  const date = new Date()
-  const today = new Date().getDay()
-  // There are no days after sunday, therefore data does not need to be cleared if it is sunday
-  if(today === 0){
-    return
-  }
-  // If it is Monday, clear the data if it hasn't been cleared for the current date
-  if(today === 1){
-    chrome.storage.local.get("cleared", (result) => {
-      if (result["cleared"] != date.toDateString()){
-        chrome.storage.local.set({ "1": {} })
-        chrome.storage.local.set({ "cleared": date.toDateString() })
+  chrome.storage.local.get("cleared", (result) => {
+    const lastCleared = new Date(result["cleared"])
+    const today = new Date()
+    
+    // Get the start date of the current week (monday)
+    const currentWeekStartDate = new Date();
+    // + 6) % 7 is done to shift the start of the week to monday.
+    currentWeekStartDate.setDate(currentWeekStartDate.getDate() - (currentWeekStartDate.getDay() + 6) % 7);
+
+    // Check if the last cleared date is invalid or if it is not in the current week
+    if (lastCleared.toString() === "Invalid Date" || lastCleared < currentWeekStartDate) {
+      chrome.storage.local.set({ "cleared": today.toDateString() })
+      for (let i = 0; i <= 6; i++) {
+        chrome.storage.local.set({ [i.toString()]: {} })
       }
-    })
-  }
-  // For other days, check if monday was cleared in the last 7 days
-  else{
-    chrome.storage.local.get("cleared", (result) => {
-      if( typeof result["cleared"] === "undefined"){
-        chrome.storage.local.set({ "1": {} })
-        chrome.storage.local.set({ "cleared": date.toDateString() })
-        return
-      }
-      const lastCleared = new Date(result["cleared"]);
-      const sevenDaysAgo = new Date();
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-      // If monday was last cleared over 7 days ago, clear it
-      if (lastCleared < sevenDaysAgo){
-        chrome.storage.local.set({ "1": {} })
-        chrome.storage.local.set({ "cleared": date.toDateString() })
-      }
-    })
-  }
-  // Clear sunday's data
-  chrome.storage.local.set({ "0": {} });
-  // Check if there is data for days in the week after the current day. If so, clear that data.
-  for (let i = today + 1; i <= 6; i++) {
-    chrome.storage.local.get(i.toString(), (result) => {
-      if (JSON.stringify(result[i.toString()]) != "{}") {
-          chrome.storage.local.set({ [i.toString()]: {} });
-      }
-    });
-  }
-});
+    }
+  })
+})
 
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === "taskTimer") {
