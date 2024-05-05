@@ -6,8 +6,6 @@ var domain = "inactive"
 var day = new Date().getDay().toString()
 // activeTabId needed for the onUpdated listener
 var activeTabId = null
-const hour = new Date().getHours()
-const min = new Date().getMinutes()
 //chrome.idle.setDetectionInterval(120) // Not sure what time to set it at. Default is 60s.
 chrome.alarms.create("taskTimer", {
   periodInMinutes: 1 / 60
@@ -20,7 +18,7 @@ chrome.alarms.create("mostUsedTimer", {
 chrome.runtime.onInstalled.addListener(async function (details) {
   // Check if the reason is 'install' or 'update'
   if (details.reason === "install" || details.reason === "update") {
-    // Initialize data for numbers 1-7 in Chrome's local storage
+    // Initialize data for numbers 1-6 in Chrome's local storage
     const initialData = {}
     for (let i = 0; i <= 6; i++) {
       console.log(i)
@@ -42,6 +40,25 @@ chrome.runtime.onInstalled.addListener(async function (details) {
     })
   }
 })
+
+// Every startup, check for and clear old website time tracking data.
+chrome.runtime.onStartup.addListener(() => {
+  const today = new Date().getDay()
+  // There are no days after sunday, therefore data does not need to be cleared if it is sunday.
+  if(today === 0){
+    return
+  }
+  // Clear sunday's data
+  chrome.storage.local.set({ "0": {} });
+  // Check if there is data for days in the week after the current day. If so, clear that data.
+  for (let i = today + 1; i <= 6; i++) {
+    chrome.storage.local.get(i.toString(), (result) => {
+      if (JSON.stringify(result[i.toString()]) != "{}") {
+          chrome.storage.local.set({ [i.toString()]: {} });
+      }
+    });
+  }
+});
 
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === "taskTimer") {
@@ -180,41 +197,12 @@ chrome.windows.onFocusChanged.addListener(handleWindowFocusChange)
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name === "mostUsedTimer") {
-    console.log(domain)
     if (domain != "inactive") {
       chrome.storage.local.get(day, (result) => {
         const currentTime = result[day][domain]
         chrome.storage.local.set({
           [day]: { ...result[day], [domain]: 1 + currentTime }
         })
-      })
-    }
-    // clear local storage at the start of the week (sunday)
-    // idk if this works
-    if (hour == 0 && min == 0 && day == "0") {
-      for (let i = 0; i <= 6; i++) {
-        if (
-          Object.keys(await chrome.storage.local.get([i.toString()])).length > 0
-        ) {
-          chrome.storage.local.remove([i.toString()])
-        }
-      }
-    }
-    if (hour == 0 && min == 1 && day == "0") {
-      // Initialize data for numbers 1-7 in Chrome's local storage
-      const newData = {}
-      for (let i = 0; i <= 6; i++) {
-        newData[i.toString()] = {}
-      }
-      chrome.storage.local.set(newData, function () {
-        if (chrome.runtime.lastError) {
-          console.error(
-            "Error initializing local storage:",
-            chrome.runtime.lastError
-          )
-        } else {
-          console.log("Local storage initialized successfully.")
-        }
       })
     }
   }
