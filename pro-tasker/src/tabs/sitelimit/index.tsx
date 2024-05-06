@@ -18,11 +18,6 @@ const SiteLimit = () => {
   const [editVisibility, setEditVisibility] = useState(false)
   const [editingIndex, setEditingIndex] = useState(null)
   const [showInputs, setShowInputs] = useState(false)
-  const [day, setDay] = useState("Monday")
-  const [hour, setHour] = useState("")
-  const [minute, setMinute] = useState("")
-  const [time, setTime] = useState("")
-  const [suffix, setSuffix] = useState("AM")
   const [schedules, setSchedules] = useState([])
   const [websites, setWebsites] = useState([])
   const [site, setSite] = useState("")
@@ -34,38 +29,30 @@ const SiteLimit = () => {
   const [activationState, setActivationState] = useState("")
   const [color, setColor] = useState("")
 
+
   const handleClick = () => {
     setShowInputs(!showInputs)
   }
 
-  const handleSaveSchedule = () => {
-    const id = new Date().getTime()
-    const time = `${hour}:${minute}`
-    setSchedules([...schedules, { id, day, time, suffix }])
-    setDay("Monday")
-    setHour("")
-    setMinute("")
-    setSuffix("AM")
-    setShowInputs(false)
-  }
 
   async function addWebsite() {
     let url = new URL(addSiteName);
     let hostname = url.hostname;
+
     await addBlocked(
       hostname,
       parseInt(timerHour),
       parseInt(timerMinute),
       schedules,
       false
-    )
+    );
+
+    await parseWebsiteList();
+    
     setTimerHour("")
     setTimerMinute("")
     setAddVisibility(false)
-    setColor("green")
-    setActivationState("Activate")
-    await chrome.storage.local.set({ [`activationState-${site}`]: 'Activate' });
-    await chrome.storage.local.set({ [`color-${site}`]: 'green' });
+
 
   }
 
@@ -74,7 +61,6 @@ const SiteLimit = () => {
     setSite("")
     setTimerHour("")
     setTimerMinute("")
-    setSuffix("AM")
     // Reset schedules to an empty array
     setSchedules([])
     setAddVisibility(true)
@@ -86,52 +72,21 @@ const SiteLimit = () => {
   const handleActivate = async (site: string) => {
     // Retrieve the current blocked website data
     const blockedData = await getBlockedData(site);
-    
     const websiteUpdated = typeof blockedData === 'object' ? blockedData : {};
-
     // If the website is blocked, update the activated field to true
     if (blockedData) {
       const currentState = await getActivationState(site);
-      const newActivationState = !currentState;
       if (currentState == false) {
         await chrome.storage.local.set({ [`blocked-${site}`]: { ...websiteUpdated, activated: true } });
-        setColor("red");
-        setActivationState("Activated");
-        console.log(`Website ${site} is activated.`);
-        console.log('The activation state is', getActivationState(site));
+        const nextState = await getActivationState(site);
       } else {
         await chrome.storage.local.set({ [`blocked-${site}`]: { ...websiteUpdated, activated: false } });
-        setColor("green");
-        setActivationState("Activate");
-        console.log(`Website ${site} is not activated.`);
-        console.log('The activation state is', getActivationState(site));
+        const nextState = await getActivationState(site);
       }
-      await chrome.storage.local.set({ [`activationState-${site}`]: newActivationState });
-      await chrome.storage.local.set({ [`color-${site}`]: newActivationState ? 'red' : 'green' });
     } else {
       console.error(`Cannot find blocked data for website ${site}.`);
     }
   }
-
-  // Function to update the button activation state when the extension loads
-const updateButtonActivationState = async (site: string) => {
-  try {
-    // Retrieve the activation state from Chrome's storage
-    const activated = await getActivationState(site);
-
-    // Update the button style and text
-    const button = document.getElementById(`activateButton-${site}`);
-
-  } catch (error) {
-    console.error(`Error updating activation state for website ${site}:`, error);
-  }
-}
-
-// Call the function to update the button activation state for each website when the extension loads
-websites.forEach((website) => {
-  updateButtonActivationState(website.url);
-});
-
 
   const DTask = async (task) => {
     await removeBlocked(task)
@@ -169,7 +124,6 @@ websites.forEach((website) => {
         if (site.startsWith("blocked-")) {
           const siteName = site.substring(8)
           newSiteList[siteName] = retrieveData[site]
-          console.log(siteName);
         }
       }
 
@@ -183,24 +137,6 @@ websites.forEach((website) => {
     parseWebsiteList() // Initial fetch
 
     const loadWebsitesInterval = setInterval(parseWebsiteList, 1000)
-
-    const fetchActivationStateAndUpdateState = async (site) => {
-      try {
-        const activated = await getActivationState(site);
-        const activationStateFromStorage = await chrome.storage.local.get(`activationState-${site}`);
-        const colorFromStorage = await chrome.storage.local.get(`color-${site}`);
-        setActivationState(activationStateFromStorage[0] ? 'Activated' : 'Activate');
-        setColor(colorFromStorage[0]);
-      } catch (error) {
-        console.error(`Error fetching activation state for website ${site}:`, error);
-      }
-    };
-
-
-    websites.forEach((website) => {
-      fetchActivationStateAndUpdateState(website.url);
-    });
-
 
     return () => {
       clearInterval(loadWebsitesInterval)
@@ -225,10 +161,21 @@ websites.forEach((website) => {
               <div className="timerText">
                 {siteList[site].hours} : {siteList[site].minutes}
               </div>
-              <button id={`activateButton-${site}`} className="activateButton" onClick={() => {handleActivate(site)}} style={{backgroundColor: color}}>
-                {activationState}
-              </button>
-
+              {siteList[site].activated == false ? (
+                <div
+                  onClick={() => {
+                    handleActivate(site)
+                  }}
+                  className="activateButton" style={{backgroundColor: 'green'}}>
+                Activate</div>
+              ) : (
+                <div
+                  onClick={() => {
+                    handleActivate(site)
+                  }}
+                  className="activateButton" style={{backgroundColor: 'red'}}>
+                Activated</div>
+              )}
               <button
                 className="editButton"
                 onClick={() => {
