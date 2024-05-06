@@ -141,7 +141,7 @@ const TaskTimer = () => {
         <div></div>
       )}
       <div onClick={() => handleAdd(addVisibility)} className="addSite">
-        + Add Website
+        + Add Task
       </div>
       <div className="taskTimerContainer">
         <div className="taskTimerHeaders">
