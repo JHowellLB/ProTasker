@@ -91,39 +91,47 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 })
 
 // Function to handle URL extraction and storage
+// Function to handle URL extraction and storage
 function handleTab(tab: chrome.tabs.Tab) {
   if (tab && tab.url) {
-      var tabUrl;
-      try {
-          tabUrl = new URL(tab.url).hostname;
-      } catch (error) {
-          // Handle invalid URLs or URLs not fully loaded
-          tabUrl = "invalid";
-      }
-      if (tabUrl !== "invalid") {
-          domain = tabUrl;
-          chrome.storage.local.get(null, function(data) {
-            const blockedWebsites: string[] = Object.keys(data).filter(key => key.startsWith("blocked-")).map(key => key.replace("blocked-", ""));
-            if (blockedWebsites.includes(domain)) {
-              console.log("This website is blocked:", domain)
-              const blockedHTML: string = chrome.runtime.getURL("src/tabs/sitelimit/redirectwebsite/blocked_website.html")
-              console.log(blockedHTML)
-              chrome.tabs.update(tab.id, { url: blockedHTML });
-            }
-          })
+    var tabUrl;
+    try {
+      tabUrl = new URL(tab.url).hostname;
+    } catch (error) {
+      // Handle invalid URLs or URLs not fully loaded
+      tabUrl = "invalid";
+    }
+    if (tabUrl !== "invalid") {
+      // Extract the domain from the URL
+      const domain = tabUrl;
+
+      // Retrieve the data for the website from storage
+      chrome.storage.local.get(`blocked-${domain}`, (data) => {
+        const websiteData = data[`blocked-${domain}`];
+        
+        // Check if the website is blocked and activated
+        if (websiteData && websiteData.activated) {
+          console.log("This website is activated and blocked:", domain);
+          // Proceed with blocking the website
+          const blockedHTML: string = chrome.runtime.getURL("src/tabs/sitelimit/redirectwebsite/blocked_website.html");
+          chrome.tabs.update(tab.id, { url: blockedHTML });
+        } else {
+          console.log("This website is not activated or not blocked:", domain);
+          // If the website is not activated or not blocked, proceed with normal handling
+          // For example, store the website in local storage based on day
           if (domain.includes(".")) {
-              day = new Date().getDay().toString();
-              chrome.storage.local.get(day, (result) => {
-                  if (typeof result[day] === "undefined") {
-                      chrome.storage.local.set({ [day]: { [domain]: 0 } });
-                  } else if (typeof result[day][domain] === "undefined") {
-                      chrome.storage.local.set({ [day]: { ...result[day], [domain]: 0 } });
-                  }
-              });
-          } else {
-              domain = "inactive";
+            const day = new Date().getDay().toString();
+            chrome.storage.local.get(day, (result) => {
+              if (typeof result[day] === "undefined") {
+                chrome.storage.local.set({ [day]: { [domain]: 0 } });
+              } else if (typeof result[day][domain] === "undefined") {
+                chrome.storage.local.set({ [day]: { ...result[day], [domain]: 0 } });
+              }
+            });
           }
-      }
+        }
+      });
+    }
   }
 }
 
