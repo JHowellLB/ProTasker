@@ -216,7 +216,6 @@ websites.forEach((website) => {
         <div className="siteLogHeader">
           <h4>Websites</h4>
           <h4>Set Time Limit</h4>
-          <h4>Schedule</h4>
         </div>
         <div id="logBody">
           {Object.keys(siteList).map((site, index) => (
@@ -229,21 +228,6 @@ websites.forEach((website) => {
               <button id={`activateButton-${site}`} className="activateButton" onClick={() => {handleActivate(site)}} style={{backgroundColor: color}}>
                 {activationState}
               </button>
-              <div className="scheduleText">
-                {siteList[site].schedules.length > 0 ? (
-                  siteList[site].schedules.map((schedule, index) => (
-                    <div key={index}>
-                      <span>{schedule.day}</span>
-                      <span>
-                        {" "}
-                        {schedule.time} {schedule.suffix}
-                      </span>
-                    </div>
-                  ))
-                ) : (
-                  <div>None</div>
-                )}
-              </div>
               <button
                 className="editButton"
                 onClick={() => {
@@ -300,62 +284,6 @@ websites.forEach((website) => {
                         value="Delete"
                         onClick={() => DTask(site)}></input>
                     </div>
-                    <div className="schedule">
-                      <div className="addScheduleButton" onClick={handleClick}>
-                        +
-                      </div>
-                      <div className="scheduleLabel">Schedule:</div>
-                    </div>
-                    <div className="scheduleTable">
-                      <div className="scheduleHeader">
-                        <h4>Day</h4>
-                        <h4>Start Time</h4>
-                      </div>
-                      {showInputs && (
-                        <div>
-                          <select
-                            className="dayInputField"
-                            value={day}
-                            onChange={(e) => setDay(e.target.value)}>
-                            <option value="Monday">Monday</option>
-                            <option value="Tuesday">Tuesday</option>
-                            <option value="Wednesday">Wednesday</option>
-                            <option value="Thursday">Thursday</option>
-                            <option value="Friday">Friday</option>
-                            <option value="Saturday">Saturday</option>
-                            <option value="Sunday">Sunday</option>
-                          </select>
-                          <input
-                            className="timeInputField"
-                            value={hour}
-                            onChange={(e) => setHour(e.target.value)}
-                            placeholder="H"
-                          />
-                          <input
-                            className="timeInputField"
-                            value={minute}
-                            onChange={(e) => setMinute(e.target.value)}
-                            placeholder="M"
-                          />
-                          <select
-                            className="scheduleInputField"
-                            value={suffix}
-                            onChange={(e) => setSuffix(e.target.value)}>
-                            <option value="AM">AM</option>
-                            <option value="PM">PM</option>
-                          </select>
-                          <button onClick={handleSaveSchedule}>Save</button>
-                        </div>
-                      )}
-                      {schedules.map((schedule) => (
-                        <div key={schedule.id} className="scheduleItem">
-                          <span className="scheduleDay">{schedule.day}</span>
-                          <span className="scheduleTime">
-                            {schedule.time} {schedule.suffix}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
                   </div>
                 </div>
               )}
@@ -400,62 +328,6 @@ websites.forEach((website) => {
                 type="submit"
                 value="Save"
                 onClick={() => addWebsite()}></input>
-            </div>
-            <div className="schedule">
-              <div className="addScheduleButton" onClick={handleClick}>
-                +
-              </div>
-              <div className="scheduleLabel">Schedule:</div>
-            </div>
-            <div className="scheduleTable">
-              <div className="scheduleHeader">
-                <h4>Day</h4>
-                <h4>Start Time</h4>
-              </div>
-              {showInputs && (
-                <div>
-                  <select
-                    className="dayInputField"
-                    value={day}
-                    onChange={(e) => setDay(e.target.value)}>
-                    <option value="Monday">Monday</option>
-                    <option value="Tuesday">Tuesday</option>
-                    <option value="Wednesday">Wednesday</option>
-                    <option value="Thursday">Thursday</option>
-                    <option value="Friday">Friday</option>
-                    <option value="Saturday">Saturday</option>
-                    <option value="Sunday">Sunday</option>
-                  </select>
-                  <input
-                    className="timeInputField"
-                    value={hour}
-                    onChange={(e) => setHour(e.target.value)}
-                    placeholder="H"
-                  />
-                  <input
-                    className="timeInputField"
-                    value={minute}
-                    onChange={(e) => setMinute(e.target.value)}
-                    placeholder="M"
-                  />
-                  <select
-                    className="scheduleInputField"
-                    value={suffix}
-                    onChange={(e) => setSuffix(e.target.value)}>
-                    <option value="AM">AM</option>
-                    <option value="PM">PM</option>
-                  </select>
-                  <button onClick={handleSaveSchedule}>Save</button>
-                </div>
-              )}
-              {schedules.map((schedule) => (
-                <div key={schedule.id} className="scheduleItem">
-                  <span className="scheduleDay">{schedule.day}</span>
-                  <span className="scheduleTime">
-                    {schedule.time} {schedule.suffix}
-                  </span>
-                </div>
-              ))}
             </div>
           </div>
         </div>
