@@ -97,14 +97,17 @@ const SiteLimit = () => {
         await chrome.storage.local.set({ [`blocked-${site}`]: { ...websiteUpdated, activated: true } });
         setColor("red");
         setActivationState("Activated");
+        console.log(`Website ${site} is activated.`);
+        console.log('The activation state is', getActivationState(site));
       } else {
         await chrome.storage.local.set({ [`blocked-${site}`]: { ...websiteUpdated, activated: false } });
         setColor("green");
         setActivationState("Activate");
+        console.log(`Website ${site} is not activated.`);
+        console.log('The activation state is', getActivationState(site));
       }
       await chrome.storage.local.set({ [`activationState-${site}`]: newActivationState });
       await chrome.storage.local.set({ [`color-${site}`]: newActivationState ? 'red' : 'green' });
-      console.log(`Website ${site} is activated.`);
     } else {
       console.error(`Cannot find blocked data for website ${site}.`);
     }
@@ -165,7 +168,6 @@ websites.forEach((website) => {
       for (const site in retrieveData) {
         if (site.startsWith("blocked-")) {
           const siteName = site.substring(8)
-          console.log("This is site: ", siteName)
           newSiteList[siteName] = retrieveData[site]
           console.log(siteName);
         }
