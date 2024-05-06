@@ -283,7 +283,7 @@ websites.forEach((website) => {
                         type="submit"
                         value="Delete"
                         onClick={() => DTask(site)}></input>
-                    </div>
+                    </div>    
                   </div>
                 </div>
               )}

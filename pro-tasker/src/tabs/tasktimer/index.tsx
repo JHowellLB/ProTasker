@@ -145,7 +145,7 @@ const TaskTimer = () => {
       </div>
       <div className="taskTimerContainer">
         <div className="taskTimerHeaders">
-          <div className="taskTimerName">Website</div>
+          <div className="taskTimerName">Task</div>
           <div className="taskTimerTime">Timer</div>
           <div className="taskTimerPlay">Play/Pause</div>
           <div className="taskTimerEdit">Edit</div>
