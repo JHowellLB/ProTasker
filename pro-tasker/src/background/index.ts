@@ -6,7 +6,6 @@ var domain = "inactive"
 var day = new Date().getDay().toString()
 // activeTabId needed for the onUpdated listener
 var activeTabId = null
-//chrome.idle.setDetectionInterval(120) // Not sure what time to set it at. Default is 60s.
 chrome.alarms.create("taskTimer", {
   periodInMinutes: 1 / 60
 })
@@ -41,24 +40,27 @@ chrome.runtime.onInstalled.addListener(async function (details) {
   }
 })
 
-// Every startup, check for and clear old website time tracking data.
+// Every startup, check for and clear old website time tracking data
+// Latest date is was cleared is stored in storage as cleared : dateString
 chrome.runtime.onStartup.addListener(() => {
-  const today = new Date().getDay()
-  // There are no days after sunday, therefore data does not need to be cleared if it is sunday.
-  if(today === 0){
-    return
-  }
-  // Clear sunday's data
-  chrome.storage.local.set({ "0": {} });
-  // Check if there is data for days in the week after the current day. If so, clear that data.
-  for (let i = today + 1; i <= 6; i++) {
-    chrome.storage.local.get(i.toString(), (result) => {
-      if (JSON.stringify(result[i.toString()]) != "{}") {
-          chrome.storage.local.set({ [i.toString()]: {} });
+  chrome.storage.local.get("cleared", (result) => {
+    const lastCleared = new Date(result["cleared"])
+    const today = new Date()
+    
+    // Get the start date of the current week (monday)
+    const currentWeekStartDate = new Date();
+    // + 6) % 7 is done to shift the start of the week to monday.
+    currentWeekStartDate.setDate(currentWeekStartDate.getDate() - (currentWeekStartDate.getDay() + 6) % 7);
+
+    // Check if the last cleared date is invalid or if it is not in the current week
+    if (lastCleared.toString() === "Invalid Date" || lastCleared < currentWeekStartDate) {
+      chrome.storage.local.set({ "cleared": today.toDateString() })
+      for (let i = 0; i <= 6; i++) {
+        chrome.storage.local.set({ [i.toString()]: {} })
       }
-    });
-  }
-});
+    }
+  })
+})
 
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === "taskTimer") {
@@ -173,9 +175,6 @@ chrome.idle.onStateChanged.addListener((newState) => {
     domain = "inactive"
     let queryOptions = { active: true, lastFocusedWindow: true, audible: true }
           chrome.tabs.query(queryOptions, ([tab]) => {
-            console.log(newState)
-            console.log(tab)
-            console.log(typeof tab)
             if(typeof tab === "undefined"){
               domain = "inactive"
             }
