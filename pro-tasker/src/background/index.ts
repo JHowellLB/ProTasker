@@ -103,7 +103,7 @@ function handleTab(tab: chrome.tabs.Tab) {
     }
     if (tabUrl !== "invalid") {
       // Extract the domain from the URL
-      const domain = tabUrl;
+      domain = tabUrl;
 
       // Retrieve the data for the website from storage
       chrome.storage.local.get(`blocked-${domain}`, (data) => {

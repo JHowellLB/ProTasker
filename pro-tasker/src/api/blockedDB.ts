@@ -4,12 +4,12 @@ interface Duration {
   hours: number
   minutes: number
   schedules: Schedule[]
+  activated: boolean
 }
 
 export interface Schedule {
   day: string // Maybe use an enum for days
   startTime: string
-  activated: boolean
 }
 
 // chrome.storage.local.get() must be wrapped in a promise to allow await.
@@ -47,7 +47,8 @@ export async function addBlocked(
   const blockedDuration: Duration = {
     hours: blockedHours,
     minutes: blockedMinutes,
-    schedules: schedules
+    schedules: schedules,
+    activated: activated
   }
 
   // Result is used later on, so await is used to ensure it contains the correct value.
@@ -56,7 +57,7 @@ export async function addBlocked(
   // If the result's type is undefined, the key is not in use. Therefore, set the value.
   // Otherwise, do not set the value.
   if (typeof result === "undefined") {
-    chrome.storage.local.set({ [blockedKey]: blockedDuration, activated }, () => {
+    chrome.storage.local.set({ [blockedKey]: blockedDuration}, () => {
       if (chrome.runtime.lastError) {
         console.error("Error adding blocked site:", chrome.runtime.lastError)
       } else {
