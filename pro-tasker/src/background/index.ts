@@ -167,9 +167,6 @@ chrome.idle.onStateChanged.addListener((newState) => {
     domain = "inactive"
     let queryOptions = { active: true, lastFocusedWindow: true, audible: true }
           chrome.tabs.query(queryOptions, ([tab]) => {
-            console.log(newState)
-            console.log(tab)
-            console.log(typeof tab)
             if(typeof tab === "undefined"){
               domain = "inactive"
             }
