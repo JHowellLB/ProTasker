@@ -178,7 +178,9 @@ const TaskTimer = () => {
                     handleTimer(task)
                   }}
                   className="button">
-                  <CgPlayButtonO size={28} />
+                  <div style={{ cursor: "pointer" }}>
+                    <CgPlayButtonO size={28} />
+                  </div>
                 </div>
               ) : (
                 <div
@@ -186,7 +188,9 @@ const TaskTimer = () => {
                     handleTimer(task)
                   }}
                   className="button">
-                  <CgPlayPauseO size={28} />
+                  <div style={{ cursor: "pointer" }}>
+                    <CgPlayPauseO size={28} />
+                  </div>
                 </div>
               )}
               <div
@@ -194,7 +198,9 @@ const TaskTimer = () => {
                   handleEdit(task)
                 }}
                 className="button">
-                <FaEdit size={28} />
+                <div style={{ cursor: "pointer" }}>
+                  <FaEdit size={28} />
+                </div>
               </div>
               <div>
                 {
