@@ -151,7 +151,7 @@ const SiteLimit = () => {
         <div className="siteLimitHeader">
           <div className="siteLimitWebsite">Websites</div>
           <div className="siteLimitTimer">Timer</div>
-          <div className="siteLimitActivate">Activate</div>
+          <div className="siteLimitActivate">Activated</div>
           <div className="siteLimitEdit">Edit</div>
         </div>
         <div className="siteDataContainer">
@@ -160,7 +160,22 @@ const SiteLimit = () => {
               <div className="siteWebsite">{site}</div>
               {/* Accessing the properties using dot notation */}
               <div className="siteTimer">
-                {siteList[site].hours} : {siteList[site].minutes}
+                <div>
+                  {`${Math.floor(((siteList[site].hours * 60 + siteList[site].minutes) * 60 - siteList[site].timer) / 3600)}`.padStart(
+                    2,
+                    "0"
+                  )}
+                  {":"}
+                  {`${Math.floor(((siteList[site].hours * 60 + siteList[site].minutes) * 60 - siteList[site].timer) / 60) % 60}`.padStart(
+                    2,
+                    "0"
+                  )}
+                  {":"}
+                  {`${((siteList[site].hours * 60 + siteList[site].minutes) * 60 - siteList[site].timer) % 60}`.padStart(
+                    2,
+                    "0"
+                  )}
+                </div>
               </div>
               <div className="siteActivate">
                 {siteList[site].activated == false ? (
