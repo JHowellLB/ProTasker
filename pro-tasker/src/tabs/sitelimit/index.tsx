@@ -41,7 +41,6 @@ const SiteLimit = () => {
       hostname,
       parseInt(timerHour),
       parseInt(timerMinute),
-      schedules,
       false
     )
 
@@ -100,13 +99,7 @@ const SiteLimit = () => {
 
   const handleEditSite = async (site) => {
     // Call editBlocked function with the edited values and the selected site
-    await editBlocked(
-      site,
-      parseInt(timerHour),
-      parseInt(timerMinute),
-      schedules,
-      false
-    )
+    await editBlocked(site, parseInt(timerHour), parseInt(timerMinute), false)
 
     // Reset input fields and close the edit popup window
     setTimerHour("")

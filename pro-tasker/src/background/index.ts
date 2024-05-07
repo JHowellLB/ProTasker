@@ -76,21 +76,23 @@ chrome.alarms.onAlarm.addListener((alarm) => {
     getTasks.then((message) => {
       message.forEach((task) => {
         chrome.storage.local.get([task], async (res) => {
-          const original = { ...res }
-          const originalTask = res[task]
-          if (
-            res[task].hours * 3600 + res[task].minutes * 60 <=
-            res[task].timer
-          ) {
-            chrome.storage.local.set({
-              ...original,
-              [task]: { ...originalTask, isRunning: false, timer: 0 }
-            })
-          } else if (res[task].isRunning) {
-            chrome.storage.local.set({
-              ...original,
-              [task]: { ...originalTask, timer: originalTask.timer + 1 }
-            })
+          if (task.startsWith("task-")) {
+            const original = { ...res }
+            const originalTask = res[task]
+            if (
+              res[task].hours * 3600 + res[task].minutes * 60 <=
+              res[task].timer
+            ) {
+              chrome.storage.local.set({
+                ...original,
+                [task]: { ...originalTask, isRunning: false, timer: 0 }
+              })
+            } else if (res[task].isRunning) {
+              chrome.storage.local.set({
+                ...original,
+                [task]: { ...originalTask, timer: originalTask.timer + 1 }
+              })
+            }
           }
         })
       })
@@ -104,21 +106,24 @@ chrome.alarms.onAlarm.addListener((alarm) => {
     getTasks.then((message) => {
       message.forEach((task) => {
         chrome.storage.local.get([task], async (res) => {
-          const original = { ...res }
-          const originalTask = res[task]
-          if (
-            res[task].hours * 3600 + res[task].minutes * 60 <=
-            res[task].timer
-          ) {
-            chrome.storage.local.set({
-              ...original,
-              [task]: { ...originalTask, activated: false, timer: 0 }
-            })
-          } else if (res[task].activated == true) {
-            chrome.storage.local.set({
-              ...original,
-              [task]: { ...originalTask, timer: originalTask.timer + 1 }
-            })
+          if (task.startsWith("blocked-")) {
+            const original = { ...res }
+            const originalTask = res[task]
+            if (
+              res[task].hours * 3600 + res[task].minutes * 60 <=
+              res[task].timer
+            ) {
+              console.log("siteLimit blocked website reset", res[task])
+              chrome.storage.local.set({
+                ...original,
+                [task]: { ...originalTask, activated: false, timer: 0 }
+              })
+            } else if (res[task].activated == true) {
+              chrome.storage.local.set({
+                ...original,
+                [task]: { ...originalTask, timer: originalTask.timer + 1 }
+              })
+            }
           }
         })
       })
