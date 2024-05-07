@@ -135,6 +135,10 @@ const SiteLimit = () => {
     }
   }, [])
 
+  const getFaviconUrl = (domain) =>
+    `https://www.google.com/s2/favicons?domain=${domain}`
+
+
   return (
     <section>
       <div className="addSite" onClick={addSiteClick}>
@@ -150,9 +154,15 @@ const SiteLimit = () => {
         <div className="siteDataContainer">
           {Object.keys(siteList).map((site, index) => (
             <div key={index} className="siteData">
-              <div className="siteWebsite">{site}</div>
-              {/* Accessing the properties using dot notation */}
-              <div className="siteTimer">
+              
+              <div className="siteWebsite">
+                    <img
+                      src={getFaviconUrl(site)}
+                      alt={`${site} favicon`}
+                      className="iconSite"
+                    />
+                    {site}
+                  </div>              <div className="siteTimer">
                 <div>
                   {`${Math.floor(((siteList[site].hours * 60 + siteList[site].minutes) * 60 - siteList[site].timer) / 3600)}`.padStart(
                     2,

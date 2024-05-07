@@ -187,8 +187,16 @@ h3 {
 
 .siteWebsite {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  align-items: center;
   width: 40%;
+  gap: 0.5rem;
+}
+
+.iconSite {
+  border-radius: 100rem;
+  margin-left: 0.25rem;
+  margin-right: 0.5rem;
 }
 
 .siteTimer {
@@ -204,6 +212,7 @@ h3 {
   background: transparent;
   align-items: center;
 }
+
 
 .siteEdit {
   display: flex;
