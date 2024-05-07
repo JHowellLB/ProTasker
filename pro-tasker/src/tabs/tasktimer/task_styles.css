@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "Lato";
+  src: url(../../assets/fonts/Lato-Regular.ttf);
+}
+@font-face {
+  font-family: "Lato-Bold";
+  src: url(../../assets/fonts/Lato-Bold.ttf);
+}
 .addTask {
   cursor: pointer;
   display: flex;
@@ -7,77 +15,11 @@
   margin-left: 1rem;
   font-size: 1rem;
   background-color: #657786;
-  font-family: Arial;
+  font-family: "Lato-Bold";
   color: white;
   width: 6.5rem;
   height: 1.75rem;
   border-radius: 0.5rem;
-}
-
-.taskLog {
-  height: 13rem;
-  margin: 1rem;
-  background-color: #aab8c2;
-  border-radius: 1rem;
-  overflow-y: auto;
-}
-
-.row {
-  display: grid;
-  grid-template-columns: 13rem 11rem 5.5rem 2rem;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-
-.logEle {
-  font-size: 1rem;
-  color: white;
-  padding-top: 0.5rem;
-  padding-left: 1.5rem;
-  padding-bottom: 0.5rem;
-}
-
-.timeEle {
-  font-size: 1rem;
-  width: 7rem;
-  color: white;
-  text-align: right;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  justify-content: right;
-}
-
-.PP {
-  cursor: pointer;
-  width: 2rem;
-  height: 2rem;
-  background: url("../../../assets/playButton.png");
-  background-size: 100% 100%;
-  border: none;
-}
-
-.E {
-  cursor: pointer;
-  width: 2rem;
-  height: 2rem;
-  background: url("../../../assets/editButton.png");
-  background-size: 100% 100%;
-  border: none;
-}
-
-.logHeader {
-  display: grid;
-  grid-template-columns: 14.7rem 6.6rem 6.3rem 2rem;
-  padding-left: 2rem;
-  padding-right: 6rem;
-  color: #657786;
-  position: sticky;
-  top: 0;
-  background-color: #aab8c2;
-  z-index: 1;
-  border-bottom: 1px solid #657786;
-  margin-bottom: 8px;
-  height: 2.5rem;
 }
 
 .popup {
@@ -159,6 +101,7 @@ h3 {
   margin: 1rem;
   border-radius: 0.5rem;
   overflow-y: auto;
+  font-family: "Lato";
 }
 
 .taskTimerHeaders {
@@ -168,12 +111,13 @@ h3 {
   border-radius: 0.5rem 0.5rem 0 0;
   flex-direction: row;
   width: 90.278%;
-  font-family: Lato;
+  font-family: "Lato-Bold";
   font-size: 1rem;
   display: flex;
   padding-block: 0.6375rem;
   position: fixed;
   padding-inline: 0.25rem;
+  background: #657786;
 }
 
 .taskTimerName {
@@ -200,8 +144,9 @@ h3 {
 }
 
 .taskDataContainer {
-  margin-top: 2.5rem;
+  margin-top: 2.675rem;
 }
+
 .taskData {
   display: flex;
   flex-direction: row;

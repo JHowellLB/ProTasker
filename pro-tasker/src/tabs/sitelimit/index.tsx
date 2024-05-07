@@ -11,7 +11,7 @@ import {
 
 import "./site_styles.css"
 
-export {}
+import { FaEdit, FaRegCheckCircle, FaRegTimesCircle } from "react-icons/fa"
 
 const SiteLimit = () => {
   const [addVisibility, setAddVisibility] = useState(false)
@@ -29,15 +29,13 @@ const SiteLimit = () => {
   const [activationState, setActivationState] = useState("")
   const [color, setColor] = useState("")
 
-
   const handleClick = () => {
     setShowInputs(!showInputs)
   }
 
-
   async function addWebsite() {
-    let url = new URL(addSiteName);
-    let hostname = url.hostname;
+    let url = new URL(addSiteName)
+    let hostname = url.hostname
 
     await addBlocked(
       hostname,
@@ -45,15 +43,13 @@ const SiteLimit = () => {
       parseInt(timerMinute),
       schedules,
       false
-    );
+    )
 
-    await parseWebsiteList();
-    
+    await parseWebsiteList()
+
     setTimerHour("")
     setTimerMinute("")
     setAddVisibility(false)
-
-
   }
 
   const addSiteClick = () => {
@@ -71,20 +67,24 @@ const SiteLimit = () => {
 
   const handleActivate = async (site: string) => {
     // Retrieve the current blocked website data
-    const blockedData = await getBlockedData(site);
-    const websiteUpdated = typeof blockedData === 'object' ? blockedData : {};
+    const blockedData = await getBlockedData(site)
+    const websiteUpdated = typeof blockedData === "object" ? blockedData : {}
     // If the website is blocked, update the activated field to true
     if (blockedData) {
-      const currentState = await getActivationState(site);
+      const currentState = await getActivationState(site)
       if (currentState == false) {
-        await chrome.storage.local.set({ [`blocked-${site}`]: { ...websiteUpdated, activated: true } });
-        const nextState = await getActivationState(site);
+        await chrome.storage.local.set({
+          [`blocked-${site}`]: { ...websiteUpdated, activated: true }
+        })
+        const nextState = await getActivationState(site)
       } else {
-        await chrome.storage.local.set({ [`blocked-${site}`]: { ...websiteUpdated, activated: false } });
-        const nextState = await getActivationState(site);
+        await chrome.storage.local.set({
+          [`blocked-${site}`]: { ...websiteUpdated, activated: false }
+        })
+        const nextState = await getActivationState(site)
       }
     } else {
-      console.error(`Cannot find blocked data for website ${site}.`);
+      console.error(`Cannot find blocked data for website ${site}.`)
     }
   }
 
@@ -113,7 +113,6 @@ const SiteLimit = () => {
     setTimerMinute("")
     setEditVisibility(false)
   }
-
 
   const parseWebsiteList = async () => {
     try {
@@ -148,43 +147,63 @@ const SiteLimit = () => {
       <div className="addSite" onClick={addSiteClick}>
         + Add Site
       </div>
-      <div className="siteLog">
-        <div className="siteLogHeader">
-          <h4>Websites</h4>
-          <h4>Set Time Limit</h4>
+      <div className="siteLimitContainer">
+        <div className="siteLimitHeader">
+          <div className="siteLimitWebsite">Websites</div>
+          <div className="siteLimitTimer">Timer</div>
+          <div className="siteLimitActivate">Activate</div>
+          <div className="siteLimitEdit">Edit</div>
         </div>
-        <div id="logBody">
+        <div className="siteDataContainer">
           {Object.keys(siteList).map((site, index) => (
-            <div key={index}>
-              <div className="websiteText">{site}</div>
+            <div key={index} className="siteData">
+              <div className="siteWebsite">{site}</div>
               {/* Accessing the properties using dot notation */}
-              <div className="timerText">
+              <div className="siteTimer">
                 {siteList[site].hours} : {siteList[site].minutes}
               </div>
-              {siteList[site].activated == false ? (
-                <div
-                  onClick={() => {
-                    handleActivate(site)
-                  }}
-                  className="activateButton" style={{backgroundColor: 'green'}}>
-                Activate</div>
-              ) : (
-                <div
-                  onClick={() => {
-                    handleActivate(site)
-                  }}
-                  className="activateButton" style={{backgroundColor: 'red'}}>
-                Activated</div>
-              )}
-              <button
-                className="editButton"
+              <div className="siteActivate">
+                {siteList[site].activated == false ? (
+                  <div
+                    onClick={() => {
+                      handleActivate(site)
+                    }}
+                    style={{
+                      display: "flex",
+                      backgroundColor: "red",
+                      alignItems: "center",
+                      borderRadius: "10rem",
+                      cursor: "pointer"
+                    }}>
+                    <FaRegTimesCircle size={28} />
+                  </div>
+                ) : (
+                  <div
+                    onClick={() => {
+                      handleActivate(site)
+                    }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      borderRadius: "10rem",
+                      backgroundColor: "green",
+                      cursor: "pointer"
+                    }}>
+                    <FaRegCheckCircle size={28} />
+                  </div>
+                )}
+              </div>
+              <div
+                className="siteEdit"
                 onClick={() => {
                   setEditVisibility(true), handleEdit(site)
                 }}>
-                E
-              </button>
-              {editVisibility && editingIndex === site &&(
-                <div id="sitePopup" className="sitePopup">
+                <div style={{ cursor: "pointer" }}>
+                  <FaEdit size={28} />
+                </div>
+              </div>
+              {editVisibility && editingIndex === site && (
+                <div id="sitePopup" className="editSitePopup">
                   <div className="sitePopupHeader">
                     <h3 className="titleLabel">Edit Website</h3>
                     <div
@@ -194,17 +213,7 @@ const SiteLimit = () => {
                     </div>
                   </div>
                   <div>
-                    <h3>Website URL:{site}</h3>
-                    {/* <select
-                      className="comboBox"
-                      value={selectedSite}
-                      onChange={(e) => setSelectedSite(e.target.value)}>
-                      {Object.keys(siteList).map((site, index) => (
-                        <option key={index} value={site}>
-                          {site}
-                        </option>
-                      ))}
-                    </select> */}
+                    <h3>Website URL: {site}</h3>
                     <h3>Website Timer:</h3>
                     <div className="time_input">
                       <input
@@ -231,7 +240,7 @@ const SiteLimit = () => {
                         type="submit"
                         value="Delete"
                         onClick={() => DTask(site)}></input>
-                    </div>    
+                    </div>
                   </div>
                 </div>
               )}
@@ -240,7 +249,7 @@ const SiteLimit = () => {
         </div>
       </div>
       {addVisibility && (
-        <div id="sitePopup" className="sitePopup">
+        <div id="sitePopup" className="addSitePopup">
           <div className="sitePopupHeader">
             <h3 className="titleLabel">Add Website</h3>
             <div className="closeBox" onClick={() => setAddVisibility(false)}>
