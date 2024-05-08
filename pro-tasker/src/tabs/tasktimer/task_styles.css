@@ -97,25 +97,23 @@ h3 {
 
 .taskTimerContainer {
   background: #aab8c2;
-  height: 13rem;
-  margin: 1rem;
+  height: 11.75rem;
+  margin: 0.5rem;
   border-radius: 0.5rem;
   overflow-y: auto;
   font-family: "Lato";
+  border: 0.5rem double black;
 }
 
 .taskTimerHeaders {
   color: #fff;
   background: #aab8c2;
   border-bottom: 0.125rem solid #000;
-  border-radius: 0.5rem 0.5rem 0 0;
   flex-direction: row;
-  width: 90.278%;
   font-family: "Lato-Bold";
   font-size: 1rem;
   display: flex;
   padding-block: 0.6375rem;
-  position: fixed;
   padding-inline: 0.25rem;
   background: #657786;
 }
@@ -143,10 +141,6 @@ h3 {
   width: 15%;
 }
 
-.taskDataContainer {
-  margin-top: 2.675rem;
-}
-
 .taskData {
   display: flex;
   flex-direction: row;
@@ -167,6 +161,7 @@ h3 {
   display: flex;
   width: 30%;
   justify-content: center;
+  align-items: center;
 }
 
 .button {
