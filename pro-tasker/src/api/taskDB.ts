@@ -4,6 +4,7 @@ interface Duration {
   hours: number
   minutes: number
   isRunning: boolean
+  isSetAlarm: boolean
   timer: number
 }
 
@@ -57,7 +58,8 @@ export async function addTask(
   taskName: string,
   taskHours: number,
   taskMinutes: number,
-  isRunning: boolean = false
+  isRunning: boolean = false,
+  isSetAlarm: boolean = false
 ) {
   // Concatenate 'task-' to uniquely identify task keys.
   const taskKey = "task-" + taskName.toLowerCase()
@@ -67,6 +69,7 @@ export async function addTask(
     hours: taskHours,
     minutes: taskMinutes,
     isRunning: isRunning,
+    isSetAlarm: false,
     timer: 0
   }
 
@@ -104,6 +107,7 @@ export async function editTask(
     hours: taskHours,
     minutes: taskMinutes,
     isRunning: isRunning,
+    isSetAlarm: false,
     timer: 0
   }
 

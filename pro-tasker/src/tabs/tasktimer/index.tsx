@@ -6,6 +6,8 @@ import { addTask, editTask, removeTask } from "../../api/taskDB"
 
 import "./task_styles.css"
 
+import { retrieveTask } from "../../api/taskDB"
+
 const TaskTimer = () => {
   const [addVisibility, setAddVisibility] = useState(false)
   const [editVisibility, setEditVisibility] = useState("")
@@ -82,6 +84,7 @@ const TaskTimer = () => {
       if (task.startsWith("task-")) {
         const taskData = await chrome.storage.local.get(task)
         newTaskList[task.substring(5)] = taskData[task]
+        newTaskList[task.substring(5)].isSetAlarm = taskData[task].isSetAlarm;
       }
     }
     setTaskList(newTaskList)
@@ -94,6 +97,35 @@ const TaskTimer = () => {
       clearInterval(loadTimesInterval)
     }
   }, [])
+
+  const checkTasks = async () => {
+    let getAllTasks = retrieveTask();
+    getAllTasks.then((allTasks) => {
+      allTasks.forEach(task => {
+        chrome.storage.local.get([task], async (taskList) => {
+          const original = { ...taskList }
+          const originalTask = taskList[task]
+          if (originalTask.isRunning && !originalTask.isSetAlarm) {
+            const d = Date(Date.now()).toString().split("GMT")[0];
+            const alarmName = "alarmTask_" + task + "_" + d;
+            const duration = originalTask.hours * 60 + originalTask.minutes - originalTask.timer / 60;
+            chrome.alarms.create(alarmName, { delayInMinutes: duration }  );
+            chrome.storage.local.set({
+              ...original,
+              [task]: { ...originalTask, isSetAlarm: true }
+            });
+          }
+          else if (!originalTask.isRunning && originalTask.isSetAlarm) {
+            chrome.storage.local.set({
+              ...original,
+              [task]: { ...originalTask, isSetAlarm: false }
+            });
+          }
+        });
+      })
+    })
+  };
+  checkTasks();
 
   return (
     <section>
@@ -178,9 +210,7 @@ const TaskTimer = () => {
                     handleTimer(task)
                   }}
                   className="button">
-                  <div style={{ cursor: "pointer" }}>
-                    <CgPlayButtonO size={28} />
-                  </div>
+                  <CgPlayButtonO size={28} />
                 </div>
               ) : (
                 <div
@@ -188,9 +218,7 @@ const TaskTimer = () => {
                     handleTimer(task)
                   }}
                   className="button">
-                  <div style={{ cursor: "pointer" }}>
-                    <CgPlayPauseO size={28} />
-                  </div>
+                  <CgPlayPauseO size={28} />
                 </div>
               )}
               <div
@@ -198,9 +226,7 @@ const TaskTimer = () => {
                   handleEdit(task)
                 }}
                 className="button">
-                <div style={{ cursor: "pointer" }}>
-                  <FaEdit size={28} />
-                </div>
+                <FaEdit size={28} />
               </div>
               <div>
                 {
