@@ -98,7 +98,7 @@ export async function editTask(
 ) {
   // Concatenate 'task-' to uniquely identify task keys.
   const taskKey = "task-" + taskName.toLowerCase()
-
+  console.log(taskName)
   // Create a duration object to store as the value
   const taskDuration: Duration = {
     hours: taskHours,
@@ -110,7 +110,6 @@ export async function editTask(
   // Result is used later on, so await is used to ensure it contains the correct value.
   const result = await getResult(taskKey)
 
-<<<<<<< HEAD
   // If the result's type is not undefined, the key is in use. Therefore, set the value as the new edit value.
   // Otherwise, the key is not in use. Log the error.
   if (typeof result != "undefined") {
@@ -124,22 +123,6 @@ export async function editTask(
   } else {
     console.log("Task key does not exist: ", taskKey)
   }
-=======
-    // If the result's type is not undefined, the key is in use. Therefore, set the value as the new edit value.
-    // Otherwise, the key is not in use. Log the error.
-    if (typeof result != 'undefined') {
-        chrome.storage.local.set({ [taskKey]: taskDuration }, () => {
-            if (chrome.runtime.lastError) {
-                console.error('Error editing task:', chrome.runtime.lastError);
-            } else {
-                console.log('Task edited:', taskKey);
-            }
-        });
-    }
-    else {
-        console.log('Task key does not exist: ', taskKey)
-    }
->>>>>>> main
 }
 
 // Function to remove a task entry in storage

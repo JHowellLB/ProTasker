@@ -1,9 +1,9 @@
-import DailyWeekly from "~components/DailyWeekly/DailyWeekly"
+import DailyWeeklyMost from "~components/DailyWeekly/DailyWeeklyMost"
 
 const MostUsed = () => {
   return (
     <section>
-      <DailyWeekly />
+      <DailyWeeklyMost />
     </section>
   )
 }

@@ -1,14 +1,16 @@
 // Define an interface for the duration entry, this will be stored as the value in the key-value storage.
-// This represents the duration of the task in hours and minutes.
+// This represents the duration a website will be blocked in hours and minutes.
 interface Duration {
   hours: number
   minutes: number
-  schedules: Schedule[]
+  timer: number
+  activated: boolean
 }
 
 export interface Schedule {
   day: string // Maybe use an enum for days
   startTime: string
+  activated: boolean
 }
 
 // chrome.storage.local.get() must be wrapped in a promise to allow await.
@@ -36,17 +38,17 @@ export async function addBlocked(
   blockedSite: string,
   blockedHours: number,
   blockedMinutes: number,
-  schedules: Schedule[]
+  activated: boolean = false
 ) {
   // Concatenate 'blocked-' to uniquely identify task keys.
   const blockedKey = "blocked-" + blockedSite.toLowerCase()
-  console.log(schedules)
 
   // Create a duration object to store as the value
   const blockedDuration: Duration = {
     hours: blockedHours,
     minutes: blockedMinutes,
-    schedules: schedules
+    activated: activated,
+    timer: 0
   }
 
   // Result is used later on, so await is used to ensure it contains the correct value.
@@ -73,7 +75,7 @@ export async function editBlocked(
   blockedSite: string,
   blockedHours: number,
   blockedMinutes: number,
-  schedules: Schedule[]
+  activated: boolean
 ) {
   // Concatenate 'blocked-' to uniquely identify task keys.
   const blockedKey = "blocked-" + blockedSite.toLowerCase()
@@ -82,7 +84,8 @@ export async function editBlocked(
   const blockedDuration: Duration = {
     hours: blockedHours,
     minutes: blockedMinutes,
-    schedules: schedules
+    activated: false,
+    timer: 0
   }
 
   // Result is used later on, so await is used to ensure it contains the correct value.
@@ -91,13 +94,16 @@ export async function editBlocked(
   // If the result's type is not undefined, the key is in use. Therefore, set the value as the new edit value.
   // Otherwise, the key is not in use. do not set the value. Log the error
   if (typeof result != "undefined") {
-    chrome.storage.local.set({ [blockedKey]: blockedDuration }, () => {
-      if (chrome.runtime.lastError) {
-        console.error("Error editing blocked site:", chrome.runtime.lastError)
-      } else {
-        console.log("Blocked site edited:", blockedKey)
+    chrome.storage.local.set(
+      { [blockedKey]: blockedDuration, activated },
+      () => {
+        if (chrome.runtime.lastError) {
+          console.error("Error editing blocked site:", chrome.runtime.lastError)
+        } else {
+          console.log("Blocked site edited:", blockedKey)
+        }
       }
-    })
+    )
   } else {
     console.log("Blocked site key does not exist: ", blockedKey)
   }
@@ -126,4 +132,35 @@ export async function removeBlocked(blockedSite: string) {
   } else {
     console.log("Blocked website key does not exist: ", blockedKey)
   }
+}
+
+// Instructions:
+//  1. Do const keys = retrievedBlocked()
+//  2. For each key iterated, do const contents = retrieveBlocked(key)
+export async function retrieveBlocked(blocked = null) {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get(blocked, function (items) {
+      let allKeys = Object.keys(items)
+      resolve(allKeys)
+    })
+  })
+}
+
+// Function to retrieve blocked website data based on key
+export async function getBlockedData(site: string) {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(`blocked-${site}`, (data) => {
+      resolve(data[`blocked-${site}`])
+    })
+  })
+}
+
+export async function getActivationState(site: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(`blocked-${site}`, (data) => {
+      const blockedData = data[`blocked-${site}`]
+      // If blockedData exists and has the activated field, resolve with its value, otherwise resolve with false
+      resolve(blockedData ? !!blockedData.activated : false)
+    })
+  })
 }
