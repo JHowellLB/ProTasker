@@ -68,7 +68,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
     const taskSchd = alarm.name.split("_")[2];
     chrome.notifications.create({
       type: 'basic',
-      iconUrl: './icon.png',
+      iconUrl: './icon128.plasmo.c11f39af.png',
       title: 'Task Timer for ' + taskName,
       message:'Task Name: ' + taskName + '\nScheduled at ' + taskSchd + ' \nNotified at     ' + Date(Date.now()).toString().split("GMT")[0]
     });
