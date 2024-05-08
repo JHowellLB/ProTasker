@@ -155,7 +155,7 @@ function handleTab(tab: chrome.tabs.Tab) {
           console.log("This website is activated and blocked:", domain)
           // Proceed with blocking the website
           const blockedHTML: string = chrome.runtime.getURL(
-            "src/tabs/sitelimit/redirectwebsite/blocked_website.html"
+            "redirectwebsite/blocked_website.html"
           )
           chrome.tabs.update(tab.id, { url: blockedHTML })
         } else {
