@@ -17,13 +17,14 @@
   background: gray;
   border-radius: 0.75rem;
   overflow: hidden;
+  border: 0.125rem solid black;
 }
 
 .dailyweeklyBtn,
 .dailyweeklyBtnActive {
   color: white;
   background: black;
-  padding: 0.5rem 2.5rem 0.5rem 2.5rem;
+  padding: 0.4rem 2.25rem 0.4rem 2.25rem;
   font-family: "Lato-Bold";
 }
 
@@ -44,6 +45,7 @@
   font-family: "Lato";
   color: white;
   border-radius: 0.5rem;
+  border: 0.125rem groove black;
 }
 
 .dataWrapper {

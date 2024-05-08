@@ -86,8 +86,8 @@ const TaskTimer = () => {
     }
     setTaskList(newTaskList)
   }
-  parseTaskList()
   useEffect(() => {
+    parseTaskList()
     const loadTimesInterval = setInterval(parseTaskList, 1000)
 
     return () => {
@@ -172,27 +172,24 @@ const TaskTimer = () => {
                   )}
                 </div>
               </div>
-              {taskData.isRunning === false ? (
-                <div
-                  onClick={() => {
-                    handleTimer(task)
-                  }}
-                  className="button">
-                  <div style={{ cursor: "pointer" }}>
+              <div className="button">
+                {taskData.isRunning === false ? (
+                  <div
+                    onClick={() => {
+                      handleTimer(task)
+                    }}>
                     <CgPlayButtonO size={28} />
                   </div>
-                </div>
-              ) : (
-                <div
-                  onClick={() => {
-                    handleTimer(task)
-                  }}
-                  className="button">
-                  <div style={{ cursor: "pointer" }}>
+                ) : (
+                  <div
+                    onClick={() => {
+                      handleTimer(task)
+                    }}
+                    style={{ cursor: "pointer" }}>
                     <CgPlayPauseO size={28} />
                   </div>
-                </div>
-              )}
+                )}
+              </div>
               <div
                 onClick={() => {
                   handleEdit(task)
