@@ -70,6 +70,17 @@ chrome.runtime.onStartup.addListener(() => {
   })
 })
 
+function notifyUser(taskName: string) {
+  chrome.notifications.create({
+    type: 'basic',
+    iconUrl: 'logo.png',
+    title: 'Task Timer',
+    message: taskName + ' has finished!',
+    priority: 2
+  });
+}
+
+
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === "taskTimer") {
     let getTasks = retrieveTask()
@@ -87,6 +98,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
                 ...original,
                 [task]: { ...originalTask, isRunning: false, timer: 0 }
               })
+              notifyUser(task.substring(5))
             } else if (res[task].isRunning) {
               chrome.storage.local.set({
                 ...original,
