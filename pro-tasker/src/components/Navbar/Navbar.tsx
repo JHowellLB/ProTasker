@@ -1,6 +1,6 @@
 import "./navbar.css"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import useFirebaseUser from "~firebase/firebaseUser"
 import MostUsed from "~tabs/mostused"
@@ -8,9 +8,21 @@ import SiteLimit from "~tabs/sitelimit"
 import TaskTimer from "~tabs/tasktimer"
 import Visualization from "~tabs/visualization"
 
+const  LOCAL_STORAGE_KEY = 'lastUsedTab'
+
 const Tabs = () => {
   const [activeTab, setActiveTab] = useState("mostused")
   const { user, isLoading, onLogout } = useFirebaseUser()
+
+  useEffect(() =>{
+    const lastUsedTab = localStorage.getItem(LOCAL_STORAGE_KEY)
+    if(lastUsedTab) setActiveTab(lastUsedTab);
+  }, [])
+ 
+  useEffect(() =>{
+    localStorage.setItem(LOCAL_STORAGE_KEY, activeTab)
+  },[activeTab])
+
 
   const handleTabClick = (tab: string) => {
     setActiveTab(tab)
